@@ -1,13 +1,15 @@
 import { FC } from "react";
-import logo from "../assets/logo.svg";
-import verified from "../assets/verified.svg";
+import logo from "../../assets/logo.svg";
+import verified from "../../assets/verified.svg";
 import avatar from "/avatar.png"
 
 export const Header: FC = () => {
   return (
-    <header className="bg-black text-white px-3 py-2 flex justify-between items-center text-xs">
+    <header className="bg-black text-white px-2 py-2 flex justify-between items-center text-xs border-b-[0.25px] border-[#858585]">
       <div className="flex gap-2">
-        <img src={logo} alt="logo" className="w-10 h-10" />
+        <div className="flex items-center justify-center pl-1">
+          <img src={logo} alt="logo" className="w-8 h-8" />
+        </div>
         <div className="h-10 w-[1px] bg-white/30 mx-2"></div>
         <div className="flex flex-col justify-center">
           <span className="text-[#8D8D8D]">{new Date().toISOString().split('T')[0]}</span>
