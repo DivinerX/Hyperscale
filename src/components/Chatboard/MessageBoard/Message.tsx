@@ -9,9 +9,10 @@ export const Message: FC<{ message: TMessage, user: TUser }> = ({ message, user 
         alt={message.sender.name}
         className="w-8 h-8 rounded-sm"
       />
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-1">
         <div className={`flex items-center gap-2 ${message.sender.id === user.id ? "flex-row-reverse" : ""}`}>
           <span>{message.sender.name}</span>
+          <img src={message.status === "pending" ? "/warning.svg" : message.status === "sent" ? "/success.svg" : message.status === "delivered" ? "/success.svg" : "/success.svg"} alt={message.status} className="w-4 h-4" />
           <span className="text-xs text-gray-500">
             {new Date(message.timestamp).toLocaleString('en-US', {
               year: 'numeric',

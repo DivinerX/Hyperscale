@@ -1,6 +1,6 @@
 import { FC } from "react";
 import logo from "../../assets/logo.svg";
-import verified from "../../assets/verified.svg";
+import verified from "../../assets/success.svg";
 import avatar from "/avatar.png"
 
 export const Header: FC = () => {
