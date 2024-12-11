@@ -10,7 +10,7 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessag
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A] border-gray-800 border-t px-4 py-2">
       <span className="text-sm text-gray-500 block mb-2">{status}</span>
-      <div className="flex items-center bg-black">
+      <div className="flex items-center bg-black border-[0.25px] border-gray-800">
         <input
           type="text"
           placeholder="CLICK HERE TO TYPE"
