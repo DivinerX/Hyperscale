@@ -1,5 +1,11 @@
 import { ChatboardPage } from './pages/Chatboard'
+import { LoginPage } from './pages/Login'
+
 export const routes = [
+  {
+    path: '/login',
+    element: LoginPage
+  },
   {
     path: '/chat',
     element: ChatboardPage
