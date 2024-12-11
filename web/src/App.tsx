@@ -1,13 +1,25 @@
 import './App.css'
-import { HeaderContainer } from './components/Header/HeaderContainer'
-import { Chatboard } from './components/Chatboard'
+import { Routes, Route } from 'react-router-dom';
+import { routes } from './routes';
+import { socketService } from './services/socket'
+import { useEffect } from 'react'
+
 function App() {
 
+  useEffect(() => {
+    socketService.init();
+  }, [])
+
   return (
-    <div className="bg-black h-full w-full text-xs text-white">
-      <HeaderContainer />
-      <Chatboard />
-    </div>
+    <Routes>
+      {routes.map((route) => (
+        <Route
+          key={route.path}
+          path={route.path}
+          element={<route.element />}
+        />
+      ))}
+    </Routes>
   )
 }
 
