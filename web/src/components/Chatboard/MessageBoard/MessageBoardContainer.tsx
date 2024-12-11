@@ -17,13 +17,13 @@ export type TMessage = {
 };
 
 export const MessageBoardContainer: FC = () => {
-  const [user, setUser] = useState<TUser>({
+  const [user] = useState<TUser>({
     id: "123",
     name: "@solamimaxi",
     avatar: "/avatar.png"
   })
 
-  const [messages, setMessages] = useState<TMessage[]>([
+  const [messages] = useState<TMessage[]>([
     {
       id: "1",
       content: "Hey there! How's everyone doing?",
