@@ -12,25 +12,25 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(name: string, email: string, password: string) {
-    const existingUser = await this.userModel.findOne({ email }).exec();
+  async register(username: string, password: string, avatar: string) {
+    const existingUser = await this.userModel.findOne({ username }).exec();
     if (existingUser) {
-      throw new UnauthorizedException('Email already exists');
+      throw new UnauthorizedException('Username already exists');
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.userModel.create({
-      name,
-      email,
+      username,
       password: hashedPassword,
+      avatar,
     });
 
     return this.generateToken(user);
   }
 
-  async login(email: string, password: string) {
-    const user = await this.userModel.findOne({ email }).exec();
+  async login(username: string, password: string) {
+    const user = await this.userModel.findOne({ username }).exec();
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -46,8 +46,8 @@ export class AuthService {
   private generateToken(user: User) {
     const payload = { 
       sub: user._id, 
-      email: user.email, 
-      name: user.name 
+      username: user.username,
+      avatar: user.avatar,
     };
     return {
       access_token: this.jwtService.sign(payload),

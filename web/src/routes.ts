@@ -1,16 +1,21 @@
 import { ChatboardPage } from './pages/Chatboard'
 import { LoginPage } from './pages/Login'
 
-export const routes = [
+interface RouteConfig {
+  path: string;
+  element: React.ComponentType | JSX.Element;
+  protected?: boolean;
+}
+
+export const routes: RouteConfig[] = [
   {
     path: '/login',
-    element: LoginPage
+    element: LoginPage,
+    protected: false
   },
   {
     path: '/chat',
-    element: ChatboardPage
+    element: ChatboardPage,
+    protected: true
   }
-  // You can easily add more routes like:
-  // { path: '/about', element: <AboutPage /> },
-  // { path: '/profile', element: <ProfilePage /> }
 ];

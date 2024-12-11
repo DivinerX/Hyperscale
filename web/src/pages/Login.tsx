@@ -1,15 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../store';
+import { loginUser } from '../store/slices/userSlice';
+import type { RootState } from '../store/index';
 
 export function LoginPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>();
+  
+  const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.user);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/chat');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Add your login logic here
-    navigate('/chat')
+    await dispatch(loginUser({ username, password }));
   }
 
   return (
@@ -20,6 +32,14 @@ export function LoginPage() {
             Sign in to your account
           </h2>
         </div>
+        {error && (
+          <div className="rounded-md bg-red-50 p-4 mb-4">
+            <div className="text-sm text-red-700">
+              {error}
+            </div>
+          </div>
+        )}
+        
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -73,9 +93,12 @@ export function LoginPage() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={loading}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              Sign in
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
         </form>
