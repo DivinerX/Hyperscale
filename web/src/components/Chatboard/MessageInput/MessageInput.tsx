@@ -4,9 +4,12 @@ interface MessageInputProps {
   status: string;
   message: string;
   setMessage: (message: string) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleSendMessage: () => void;
+  handleFileUpload: () => void;
 }
 
-export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessage }) => {
+export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessage, onKeyDown, handleSendMessage, handleFileUpload }) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A] border-gray-800 border-t px-4 py-2">
       <span className="text-sm text-gray-500 block mb-2">{status}</span>
@@ -16,9 +19,11 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessag
           placeholder="CLICK HERE TO TYPE"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={onKeyDown}
           className="flex-1 bg-black px-3 py-1 focus:outline-0"
         />
         <button
+          onClick={handleFileUpload}
           className="p-2 px-4 text-gray-500 hover:text-gray-300 transition-colors"
           aria-label="Add attachment"
         >
@@ -28,6 +33,7 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessag
         </button>
         <div className="h-5 w-[1px] bg-gray-800" />
         <button
+          onClick={handleSendMessage}
           className="px-4 py-1 bg-black"
         >
           SEND

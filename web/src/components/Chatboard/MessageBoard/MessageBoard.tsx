@@ -1,13 +1,13 @@
 import { FC } from "react";
-import { TMessage, TUser } from "./MessageBoardContainer";
+import { IMessage, IUser } from "@/Types";
 import { Message } from "./Message";
 
-export const MessageBoard: FC<{ messages: TMessage[], user: TUser }> = ({ messages, user }) => {
+export const MessageBoard: FC<{ messages: IMessage[], user: IUser | null }> = ({ messages, user }) => {
   return (
-    <div className="p-5 space-y-4">
+    user && (<div className="p-5 space-y-4">
       {messages.map((message) => (
         <Message key={message.id} message={message} user={user} />
       ))}
-    </div>
+    </div>)
   );
 };

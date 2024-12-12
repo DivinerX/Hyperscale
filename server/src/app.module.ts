@@ -3,6 +3,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import mongoConfig from './config/mongo.config';
 import { DatabaseService } from './database.service';
+import { SocketGateway } from './gateways/socket.gateway';
+import { AuthModule } from './auth/auth.module';
+import { MessageModule } from './message/message.module';
+import { MessageService } from './message/message.service';
+import { Message, MessageSchema } from './message/message.schema';
 
 @Module({
   imports: [
@@ -17,7 +22,10 @@ import { DatabaseService } from './database.service';
       }),
       inject: [ConfigService],
     }),
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
+    AuthModule,
+    MessageModule,
   ],
-  providers: [DatabaseService],
+  providers: [DatabaseService, SocketGateway, MessageService],
 })
 export class AppModule {}
