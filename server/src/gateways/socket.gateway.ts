@@ -6,19 +6,8 @@ import {
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-
-interface IConnectedUser {
-  socketId: string;
-  userId?: string;
-  username?: string;
-  connectionTime: Date;
-}
-
-const event = {
-  onlineUsers: "onlineUsers",
-  userIdentify: "userIdentify",
-  message: "message"
-}
+import { MessageService } from '../message/message.service';
+import { IConnectedUser, IReceiveMessage, IMessage, event } from 'src/types';
 
 @WebSocketGateway({
   cors: {
@@ -31,6 +20,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private connectedUsers: Map<string, IConnectedUser> = new Map();
 
+  constructor(private messageService: MessageService) {}
+
   private broadcastOnlineUsers() {
     const onlineUsers = this.getAllConnectedUsers();
     this.server.emit(event.onlineUsers, onlineUsers);
@@ -38,8 +29,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleConnection(client: Socket) {
     const newUser: IConnectedUser = {
-      socketId: client.id,
-      connectionTime: new Date(),
+      socketId: client.id
     };
     
     this.connectedUsers.set(client.id, newUser);
@@ -55,32 +45,43 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.broadcastOnlineUsers();
   }
 
-  @SubscribeMessage(event.userIdentify)
-  handleUserIdentification(client: Socket, payload: { userId: string, username: string }): void {
-    const user = this.connectedUsers.get(client.id);
-    if (user) {
-      user.userId = payload.userId;
-      user.username = payload.username;
-      this.connectedUsers.set(client.id, user);
-    }
-    
+  @SubscribeMessage(event.checkUsers)
+  handleCheckOnlineUsers(client: Socket): void {
     this.broadcastOnlineUsers();
   }
 
-  @SubscribeMessage('message') 
-  handleMessage(client: Socket, payload: any): void {
+  @SubscribeMessage(event.userIdentify)
+  handleUserIdentification(client: Socket, payload: { id: string, username: string, avatar: string }): void {
     const user = this.connectedUsers.get(client.id);
-    console.log('Received message from user:', user);
-    console.log('Message:', payload);
-    
-    this.server.emit(event.message, {
-      message: payload,
-      user: user,
-      timestamp: new Date()
-    });
+    if (user) {
+      user.id = payload.id;
+      user.username = payload.username;
+      user.avatar = payload.avatar;
+      user.connectionTime = new Date();
+      this.connectedUsers.set(client.id, user);
+    }
+    this.broadcastOnlineUsers();
   }
 
-  // Helper methods to work with connected users
+  @SubscribeMessage(event.userMessage) 
+  async handleMessage(client: Socket, payload: IReceiveMessage): Promise<void> {
+    const user = this.connectedUsers.get(client.id);
+
+    const message: IMessage = {
+      ...payload,
+      timestamp: new Date()
+    }
+    
+    try {
+      message.status = "sent"
+      await this.messageService.create(message);
+      client.emit(event.sentMessage, message);
+      this.server.except(client.id).emit(event.serverMessage, message);
+    } catch (error) {
+      console.error('Error saving message:', error);
+    }
+  }
+
   getAllConnectedUsers(): IConnectedUser[] {
     return Array.from(this.connectedUsers.values());
   }
@@ -90,6 +91,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   getUserByUserId(userId: string): IConnectedUser | undefined {
-    return Array.from(this.connectedUsers.values()).find(user => user.userId === userId);
+    return Array.from(this.connectedUsers.values()).find(user => user.id === userId);
   }
 }

@@ -5,6 +5,9 @@ import mongoConfig from './config/mongo.config';
 import { DatabaseService } from './database.service';
 import { SocketGateway } from './gateways/socket.gateway';
 import { AuthModule } from './auth/auth.module';
+import { MessageModule } from './message/message.module';
+import { MessageService } from './message/message.service';
+import { Message, MessageSchema } from './message/message.schema';
 
 @Module({
   imports: [
@@ -19,8 +22,10 @@ import { AuthModule } from './auth/auth.module';
       }),
       inject: [ConfigService],
     }),
-    AuthModule
+    MongooseModule.forFeature([{ name: Message.name, schema: MessageSchema }]),
+    AuthModule,
+    MessageModule,
   ],
-  providers: [DatabaseService, SocketGateway],
+  providers: [DatabaseService, SocketGateway, MessageService],
 })
 export class AppModule {}

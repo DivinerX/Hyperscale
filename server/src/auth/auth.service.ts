@@ -43,11 +43,21 @@ export class AuthService {
     return this.generateToken(user);
   }
 
+  async getAllUser() {
+    return await this.userModel.find().exec();
+  }
+
+  async getTotalUser() {
+    return await this.userModel.countDocuments().exec();
+  }
+
   private generateToken(user: User) {
     const payload = { 
       sub: user._id, 
       username: user.username,
       avatar: user.avatar,
+      verified: user.verified,
+      id: user._id,
     };
     return {
       access_token: this.jwtService.sign(payload),
