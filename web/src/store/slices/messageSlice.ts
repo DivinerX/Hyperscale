@@ -2,6 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IMessage, IMessageState } from '@/Types';
 
 const initialState: IMessageState = {
+  mode: 'GLOBAL',
+  target: null,
   messages: [],
   loading: false,
   error: null,

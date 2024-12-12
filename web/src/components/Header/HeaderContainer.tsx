@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { Header } from "./Header";
-import { socketService } from "@/services/socket";
+import { SocketService } from "@/services/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { Loading } from "@/components/Loading";
@@ -18,9 +18,9 @@ export const HeaderContainer: FC = () => {
 
   useEffect(() => {
     dispatch(getTotalUsers());
-    socketService.emit(socketService.event.checkUsers, user);
+    SocketService.emit(SocketService.event.checkUsers, user);
 
-    socketService.on(socketService.event.onlineUsers, (data: any) => {
+    SocketService.on(SocketService.event.onlineUsers, (data: any) => {
       setOnlineUsers(data.length)
     })
   }, [])

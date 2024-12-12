@@ -1,4 +1,6 @@
 import { FC } from "react";
+import verified from "@/assets/verified.svg";
+import unverified from "@/assets/unverified.svg";
 import { IMessage, IUser } from "@/Types";
 
 export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user }) => {
@@ -12,7 +14,7 @@ export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user 
       <div className="flex flex-col gap-1">
         <div className={`flex items-center gap-2 ${message.sender.id === user.id ? "flex-row-reverse" : ""}`}>
           <span>@{message.sender.username}</span>
-          <img src={message.status === "pending" ? "/warning.svg" : message.status === "sent" ? "/success.svg" : message.status === "delivered" ? "/success.svg" : "/success.svg"} alt={message.status} className="w-4 h-4" />
+          <img src={message.sender.verified ? verified : unverified} alt={message.sender.verified ? "verified" : "unverified"} className="w-4 h-4" />
           <span className="text-xs text-gray-500">
             {new Date(message.timestamp).toLocaleString('en-US', {
               year: 'numeric',

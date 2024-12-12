@@ -9,6 +9,8 @@ export interface IMessage {
 }
 
 export interface IMessageState {
+  mode: 'WHISPER' | 'GLOBAL';
+  target: IUser | null;
   messages: IMessage[];
   loading: boolean;
   error: string | null;
@@ -36,6 +38,7 @@ export interface IUser {
   id: string;
   username: string;
   avatar: string;
+  verified: boolean;
 }
 
 export interface IUserState {

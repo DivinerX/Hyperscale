@@ -8,18 +8,18 @@ import { useDispatch } from 'react-redux';
 import { validateToken } from '@/services/validToken';
 import { setUser } from '@/store/slices/userSlice';
 import { jwtDecode } from 'jwt-decode';
-import { socketService } from './services/socket';
+import { SocketService } from './services/socket';
 import { IDecodedToken } from '@/Types';
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
-    socketService.init();
+    SocketService.init();
 
     const token = storageService.getItem('token');
     if (token && validateToken(token)) {
       const decoded = jwtDecode<IDecodedToken>(token);
       dispatch(setUser(decoded));
-      socketService.emit(socketService.event.userIdentify, {id: decoded.sub, username: decoded.username});
+      SocketService.emit(SocketService.event.userIdentify, {id: decoded.sub, username: decoded.username});
     }
   }, [])
 

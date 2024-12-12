@@ -4,7 +4,7 @@ import { IMessage, IUser } from "@/Types";
 import { RootState } from "@/store";
 import { useSelector, useDispatch } from "react-redux";
 import { addMessage, updateMessageStatus } from "@/store/slices/messageSlice";
-import { socketService } from "@/services/socket";
+import { SocketService } from "@/services/socket";
 
 
 export const MessageBoardContainer: FC = () => {
@@ -13,11 +13,11 @@ export const MessageBoardContainer: FC = () => {
   const messages: IMessage[] = useSelector((state: RootState) => state.messages.messages);
 
   useEffect(() => {
-    socketService.on(socketService.event.sentMessage, (message: IMessage) => {
+    SocketService.on(SocketService.event.sentMessage, (message: IMessage) => {
       dispatch(updateMessageStatus({ id: message.id, status: "sent" }));
     });
 
-    socketService.on(socketService.event.serverMessage, (message: IMessage) => {
+    SocketService.on(SocketService.event.serverMessage, (message: IMessage) => {
       dispatch(addMessage(message));
     });
   }, [])

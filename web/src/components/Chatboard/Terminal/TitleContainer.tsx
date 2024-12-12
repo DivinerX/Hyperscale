@@ -1,10 +1,12 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { Terminal } from "./Terminal";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 export const TerminalContainer: FC = () => {
-  const [terminal] = useState<string>("GLOBAL");
+  const mode = useSelector((state: RootState) => state.messages.mode);
   return (
-    <Terminal terminal={terminal}/>
+    <Terminal mode={mode}/>
   );
 };
 

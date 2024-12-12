@@ -3,7 +3,7 @@ import { MessageInput } from "./MessageInput";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { Loading } from "@/components/Loading";
-import { socketService } from "@/services/socket";
+import { SocketService } from "@/services/socket";
 import { addMessage } from '@/store/slices/messageSlice';
 import { v4 as uuidv4 } from 'uuid';
 import { IMessage } from "@/Types";
@@ -24,13 +24,14 @@ export const MessageInputContainer: FC<{}> = () => {
           id: user!.id,
           username: user!.username,
           avatar: user!.avatar,
+          verified: user!.verified,
         },
         receiver: null,
         status: "pending",
         timestamp: new Date().toISOString(),
       };
       dispatch(addMessage(newMessage as IMessage));
-      socketService.emit(socketService.event.userMessage, newMessage);
+      SocketService.emit(SocketService.event.userMessage, newMessage);
       setMessage('');
     }
   }

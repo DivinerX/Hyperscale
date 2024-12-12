@@ -1,15 +1,13 @@
 import { io, Socket } from 'socket.io-client';
 import { storageService } from '@/services/storage';
 
-class SocketService {
-  private static instance: SocketService;
-  private socket: Socket | null = null;
+export class SocketService {
+  private static socket: Socket | null = null;
 
   private constructor() {
-    // Remove socket initialization from constructor
   }
 
-  public event = {
+  public static event = {
     onlineUsers: "onlineUsers",
     checkUsers: "checkUsers",
     userIdentify: "userIdentify",
@@ -19,7 +17,7 @@ class SocketService {
     userTyping: "userTyping",
   }
 
-  public init(): void {
+  public static init(): void {
     if (!this.socket) {
       const socketUrl = import.meta.env.VITE_SOCKET_URL;
       const token = storageService.getItem('token');
@@ -40,35 +38,26 @@ class SocketService {
     }
   }
 
-  public static getInstance(): SocketService {
-    if (!SocketService.instance) {
-      SocketService.instance = new SocketService();
-    }
-    return SocketService.instance;
-  }
-
-  public getSocket(): Socket | null {
+  public static getSocket(): Socket | null {
     return this.socket;
   }
 
-  public disconnect(): void {
+  public static disconnect(): void {
     if (this.socket) {
       this.socket.disconnect();
       this.socket = null;
     }
   }
 
-  public emit(event: string, data: any): void {
+  public static emit(event: string, data: any): void {
     if (this.socket) {
       this.socket.emit(event, data);
     }
   }
 
-  public on(event: string, callback: (...args: any[]) => void): void {
+  public static on(event: string, callback: (...args: any[]) => void): void {
     if (this.socket) {
       this.socket.on(event, callback);
     }
   }
 }
-
-export const socketService = SocketService.getInstance();
