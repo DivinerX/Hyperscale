@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IMessage, IMessageState } from '@/Types';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IMessage, IMessageState, IUser } from '@/Types';
+import axiosInstance from '@/services/axios';
 
 const initialState: IMessageState = {
   mode: 'GLOBAL',
@@ -8,6 +9,18 @@ const initialState: IMessageState = {
   loading: false,
   error: null,
 };
+
+export const getMessages = createAsyncThunk('messages/getMessages',
+  async (target: IUser | null) => {
+    if (!target) {
+      const response = await axiosInstance.get(`/api/message`);
+      console.log(response.data);
+      return response.data;
+    }
+    const response = await axiosInstance.get(`/api/message/${target?.id}`);
+    return response.data;
+  }
+);
 
 const messageSlice = createSlice({
   name: 'messages',
@@ -25,6 +38,19 @@ const messageSlice = createSlice({
     setMessages: (state, action: PayloadAction<IMessage[]>) => {
       state.messages = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getMessages.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getMessages.fulfilled, (state, action) => {
+      state.messages = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getMessages.rejected, (state, action) => {
+      state.error = action.error.message || null;
+      state.loading = false;
+    });
   },
 });
 
