@@ -1,25 +1,25 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom';
 import { routes } from './routes';
-import { socketService } from './services/socket'
 import { useEffect } from 'react'
 import { PrivateRoute } from './components/PrivateRoute';
-import { storageService } from './services/storage';
+import { storageService } from '@/services/storage';
 import { useDispatch } from 'react-redux';
-import { validateToken } from './services/validToken';
-import { DecodedToken, setUser } from './store/slices/userSlice';
+import { validateToken } from '@/services/validToken';
+import { setUser } from '@/store/slices/userSlice';
 import { jwtDecode } from 'jwt-decode';
-
+import { socketService } from './services/socket';
+import { IDecodedToken } from '@/Types';
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     socketService.init();
 
     const token = storageService.getItem('token');
-    console.log("token", token);
     if (token && validateToken(token)) {
-      const decoded = jwtDecode<DecodedToken>(token);
+      const decoded = jwtDecode<IDecodedToken>(token);
       dispatch(setUser(decoded));
+      socketService.emit(socketService.event.userIdentify, {id: decoded.sub, username: decoded.username});
     }
   }, [])
 

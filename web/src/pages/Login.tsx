@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '../store';
-import { loginUser } from '../store/slices/userSlice';
-import type { RootState } from '../store/index';
+import { AppDispatch } from '@/store';
+import { loginUser } from '@/store/slices/userSlice';
+import type { RootState } from '@/store';
 
 export function LoginPage() {
   const [username, setUsername] = useState('')

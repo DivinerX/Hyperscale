@@ -10,7 +10,6 @@ const axiosInstance = axios.create({
   }
 });
 
-// Request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = storageService.getItem('token');

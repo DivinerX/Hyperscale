@@ -1,17 +1,17 @@
 import { FC } from "react";
-import { TMessage, TUser } from "./MessageBoardContainer";
+import { IMessage, IUser } from "@/Types";
 
-export const Message: FC<{ message: TMessage, user: TUser }> = ({ message, user }) => {
+export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user }) => {
   return (
     <div key={message.id} className={`flex items-start gap-2 ${message.sender.id === user.id ? "flex-row-reverse justify-start" : ""}`}>
       <img
         src={message.sender.avatar}
-        alt={message.sender.name}
+        alt={message.sender.username}
         className="w-8 h-8 rounded-sm"
       />
       <div className="flex flex-col gap-1">
         <div className={`flex items-center gap-2 ${message.sender.id === user.id ? "flex-row-reverse" : ""}`}>
-          <span>{message.sender.name}</span>
+          <span>@{message.sender.username}</span>
           <img src={message.status === "pending" ? "/warning.svg" : message.status === "sent" ? "/success.svg" : message.status === "delivered" ? "/success.svg" : "/success.svg"} alt={message.status} className="w-4 h-4" />
           <span className="text-xs text-gray-500">
             {new Date(message.timestamp).toLocaleString('en-US', {

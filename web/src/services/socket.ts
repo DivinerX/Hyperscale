@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { storageService } from '@/services/storage';
 
 class SocketService {
   private static instance: SocketService;
@@ -10,14 +11,24 @@ class SocketService {
 
   public event = {
     onlineUsers: "onlineUsers",
-    clientCount: "clientCount",
+    checkUsers: "checkUsers",
     userIdentify: "userIdentify",
-    message: "message"
+    userMessage: "userMessage",
+    sentMessage: "sentMessage",
+    serverMessage: "serverMessage",
+    userTyping: "userTyping",
   }
+
   public init(): void {
     if (!this.socket) {
       const socketUrl = import.meta.env.VITE_SOCKET_URL;
-      this.socket = io(socketUrl);
+      const token = storageService.getItem('token');
+      
+      this.socket = io(socketUrl, {
+        auth: {
+          token: token
+        }
+      });
       
       this.socket.on('connect', () => {
         console.log('Connected to server');

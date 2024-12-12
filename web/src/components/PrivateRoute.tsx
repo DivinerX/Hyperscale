@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
-import { storageService } from '../services/storage';
+import { storageService } from "@/services/storage";
 
 interface JwtPayload {
   exp: number;
@@ -17,7 +17,7 @@ const isTokenExpired = (token: string): boolean => {
 };
 
 const isAuthenticated = (): boolean => {
-  const token = localStorage.getItem('token');
+  const token = storageService.getItem('token');
   if (!token) return false;
   
   return !isTokenExpired(token);
