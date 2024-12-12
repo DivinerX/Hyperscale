@@ -7,11 +7,13 @@ import { SocketService } from "@/services/socket";
 import { addMessage } from '@/store/slices/messageSlice';
 import { v4 as uuidv4 } from 'uuid';
 import { IMessage } from "@/Types";
+import { CommandMessage } from "./CommandMessage";
 
 export const MessageInputContainer: FC<{}> = () => {
   const [status] = useState<string>("@broskiman2 and 2 others are typing...");
   const [message, setMessage] = useState<string>("");
   const user = useSelector((state: RootState) => state.user.user);
+
   const dispatch = useDispatch();
 
   const sendTextMessage = () => {
@@ -49,9 +51,14 @@ export const MessageInputContainer: FC<{}> = () => {
   const handleFileUpload = () => {
     console.log('File upload');
   }
+
   return (
     user ?
-      <MessageInput status={status} message={message} setMessage={setMessage} onKeyDown={onKeyDown} handleSendMessage={handleSendMessage} handleFileUpload={handleFileUpload} />
+      (<>
+        <CommandMessage message={message}/>
+        <MessageInput status={status} message={message} setMessage={setMessage} onKeyDown={onKeyDown} handleSendMessage={handleSendMessage} handleFileUpload={handleFileUpload} />
+      </>
+      )
       : <Loading />
   );
 };
