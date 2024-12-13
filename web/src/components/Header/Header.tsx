@@ -2,18 +2,13 @@ import { FC } from "react";
 import logo from "@/assets/logo.svg";
 import verified from "@/assets/verified.svg";
 import unverified from "@/assets/unverified.svg";
-import avatar from "/avatar.png";
-
+import { IUser } from "@/Types";
 interface HeaderProps {
   onlineUsers: number;
   totalUsers: number;
   builtDate: string;
   version: string;
-  user: {
-    username: string;
-    id: string;
-    verified?: boolean;
-  };
+  user: IUser;
 }
 
 export const Header: FC<HeaderProps> = ({ onlineUsers, totalUsers, builtDate, version, user }) => {
@@ -49,7 +44,7 @@ export const Header: FC<HeaderProps> = ({ onlineUsers, totalUsers, builtDate, ve
           <span className="flex items-center gap-1">{`${user.username}`} <img src={user.verified ? verified : unverified} alt="verified" className="w-4 h-4" /></span>
         </div>
         <div>
-          <img src={avatar} alt="avatar" className="w-10 h-10 rounded-sm" />
+          <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-sm" />
         </div>
       </div>
     </header>

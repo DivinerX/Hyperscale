@@ -25,6 +25,14 @@ export class SocketService {
       this.socket = io(socketUrl, {
         auth: {
           token: token
+        },
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        timeout: 5000,
+        query: {
+          token: token
         }
       });
       
@@ -52,6 +60,12 @@ export class SocketService {
   public static emit(event: string, data: any): void {
     if (this.socket) {
       this.socket.emit(event, data);
+    }
+  }
+  
+  public static off(event: string, callback: (...args: any[]) => void): void {
+    if (this.socket) {
+      this.socket.off(event, callback);
     }
   }
 

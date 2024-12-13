@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { TerminalContainer } from "./Terminal/TitleContainer";
+import { TerminalContainer } from "./Terminal/TerminalContainer";
 import { MessageBoardContainer } from "./MessageBoard/MessageBoardContainer";
 import { MessageInputContainer } from "./MessageInput/MessageInputContainer";
 
