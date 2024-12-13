@@ -14,7 +14,6 @@ export const getMessages = createAsyncThunk('messages/getMessages',
   async (target: IUser | null) => {
     if (!target) {
       const response = await axiosInstance.get(`/api/message`);
-      console.log(response.data);
       return response.data;
     }
     const response = await axiosInstance.get(`/api/message/${target?.id}`);
