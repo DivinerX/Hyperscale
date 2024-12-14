@@ -23,6 +23,7 @@ export const HeaderContainer: FC = () => {
 
   useEffect(() => {
     SocketService.on(SocketService.event.onlineUsers, (data) => {
+      console.log("online users", data);
       setOnlineUsers(data.length)  
     })
   }, [])
