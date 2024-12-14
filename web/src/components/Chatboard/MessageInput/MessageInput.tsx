@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useRef } from "react";
 
 interface MessageInputProps {
   status: string;
@@ -6,10 +6,22 @@ interface MessageInputProps {
   setMessage: (message: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleSendMessage: () => void;
-  handleFileUpload: () => void;
+  handleFileUpload: (file: File) => void;
 }
 
 export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessage, onKeyDown, handleSendMessage, handleFileUpload }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileUpload(file);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-[#0A0A0A] border-gray-800 border-t px-4 py-2">
       <span className="text-sm text-gray-500 block mb-2">{status}</span>
@@ -23,7 +35,7 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessag
           className="flex-1 bg-black px-3 py-1 focus:outline-0"
         />
         <button
-          onClick={handleFileUpload}
+          onClick={() => fileInputRef.current?.click()}
           className="p-2 px-4 text-gray-500 hover:text-gray-300 transition-colors"
           aria-label="Add attachment"
         >
@@ -39,6 +51,13 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, setMessag
           SEND
         </button>
       </div>
+      <input
+        type="file"
+        accept="image/*"
+        onChange={onFileChange}
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+      />
     </div>
   );
 };

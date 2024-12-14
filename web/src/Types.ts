@@ -3,7 +3,7 @@ export interface IMessage {
   type: 'text' | 'image' | 'audio' | 'video' | 'file';
   content: string;
   sender: IUser;
-  receiver: IUser[] | null;
+  receiver: IUser | null;
   status: 'pending' | 'sent' | 'delivered' | 'read';
   timestamp: string;
 }

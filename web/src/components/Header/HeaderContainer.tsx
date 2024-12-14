@@ -19,15 +19,18 @@ export const HeaderContainer: FC = () => {
   useEffect(() => {
     dispatch(getTotalUsers());
     SocketService.emit(SocketService.event.checkUsers, user);
+  }, [dispatch, user])
 
-    SocketService.on(SocketService.event.onlineUsers, (data: any) => {
-      setOnlineUsers(data.length)
+  useEffect(() => {
+    SocketService.on(SocketService.event.onlineUsers, (data) => {
+      setOnlineUsers(data.length)  
     })
   }, [])
+
   return (
     user ?
-    <Header onlineUsers={onlineUsers} totalUsers={totalUsers} builtDate={builtDate} version={version} user={user}/>
-    : <Loading />
+      <Header onlineUsers={onlineUsers} totalUsers={totalUsers} builtDate={builtDate} version={version} user={user} />
+      : <Loading />
   );
 };
 

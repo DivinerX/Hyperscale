@@ -21,7 +21,7 @@ function App() {
       dispatch(setUser(decoded));
       SocketService.emit(SocketService.event.userIdentify, {id: decoded.sub, username: decoded.username});
     }
-  }, [])
+  }, [dispatch])
 
   return (
     <Routes>
