@@ -21,6 +21,10 @@ function App() {
       dispatch(setUser(decoded));
       SocketService.emit(SocketService.event.userIdentify, {id: decoded.sub, username: decoded.username});
     }
+
+    return () => {
+      SocketService.disconnect();
+    }
   }, [dispatch])
 
   return (
