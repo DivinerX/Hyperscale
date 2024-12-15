@@ -3,11 +3,12 @@ import { jwtDecode } from "jwt-decode";
 import { storageService } from '@/services/storage';
 import axiosInstance from '@/services/axios';
 import { SocketService } from '@/services/socket';
-import { IUserState, ILoginCredentials, ILoginResponse, IDecodedToken } from '@/Types';
+import { IUserState, ILoginCredentials, ILoginResponse, IDecodedToken, IUser } from '@/Types';
 
 const initialState: IUserState = {
   user: null,
-  totalUsers: 0,
+  users: [],
+  onlineUsers: [],
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -36,10 +37,10 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const getTotalUsers = createAsyncThunk(
-  'user/getTotalUsers',
+export const getAllUsers = createAsyncThunk(
+  'user/allUsers',
   async () => {
-    const response = await axiosInstance.get<number>('/api/user/total');
+    const response = await axiosInstance.get<IUser[]>('/api/user/all');
     return response.data;
   }
 );
@@ -60,6 +61,9 @@ const userSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
     },
+    setOnlineUsers: (state, action) => {
+      state.onlineUsers = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -77,20 +81,20 @@ const userSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Login failed';
       })
-      .addCase(getTotalUsers.pending, (state) => {
+      .addCase(getAllUsers.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getTotalUsers.rejected, (state, action) => {
+      .addCase(getAllUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'Failed to get total users';
+        state.error = action.error.message || 'Failed to get all users';
       })
-      .addCase(getTotalUsers.fulfilled, (state, action) => {
+      .addCase(getAllUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.totalUsers = action.payload;
+        state.users = action.payload;
       });
   },
 });
 
-export const { logout, clearError, setUser } = userSlice.actions;
+export const { logout, clearError, setUser, setOnlineUsers } = userSlice.actions;
 export default userSlice.reducer; 

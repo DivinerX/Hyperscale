@@ -4,16 +4,18 @@ import verified from "@/assets/verified.svg";
 import unverified from "@/assets/unverified.svg";
 import { IUser } from "@/Types";
 interface HeaderProps {
-  onlineUsers: number;
+  onlineUsers: IUser[];
   totalUsers: number;
   builtDate: string;
   version: string;
   user: IUser;
+  currentTime: string;
 }
 
-export const Header: FC<HeaderProps> = ({ onlineUsers, totalUsers, builtDate, version, user }) => {
+export const Header: FC<HeaderProps> = ({ onlineUsers, totalUsers, builtDate, version, user, currentTime }) => {
+
   return (
-    <header className="bg-black text-white px-2 py-2 flex justify-between items-center text-xs border-b-[0.25px] border-[#858585]">
+    <header className="bg-black fixed top-0 z-10 w-full text-white px-2 py-2 flex justify-between items-center text-xs border-b-[0.25px] border-[#858585] h-14">
       <div className="flex gap-2">
         <div className="flex items-center justify-center pl-1">
           <img src={logo} alt="logo" className="w-8 h-8" />
@@ -21,11 +23,11 @@ export const Header: FC<HeaderProps> = ({ onlineUsers, totalUsers, builtDate, ve
         <div className="h-10 w-[1px] bg-white/30 mx-2"></div>
         <div className="flex flex-col justify-center">
           <span className="text-[#8D8D8D]">{new Date().toISOString().split('T')[0]}</span>
-          <span className="text-[#8D8D8D]">{new Date().toLocaleTimeString('en-US', { hour12: false })}</span>
+          <span className="text-[#8D8D8D]">{currentTime}</span>
         </div>
         <div className="flex flex-col justify-center px-3">
           <span className="text-[#8D8D8D]">USER: ONLINE</span>
-          <span className="flex items-center gap-1"><div className="w-[5px] h-[5px] rounded-full bg-green-500"></div> {onlineUsers}/{totalUsers}</span>
+          <span className="flex items-center gap-1"><div className="w-[5px] h-[5px] rounded-full bg-green-500"></div> {onlineUsers ? onlineUsers.length : 0}/{totalUsers}</span>
         </div>
         <div className="h-10 w-[1px] bg-white/30 mx-2"></div>
         <div className="flex flex-col justify-center">

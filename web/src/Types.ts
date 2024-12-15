@@ -43,7 +43,8 @@ export interface IUser {
 
 export interface IUserState {
   user: IUser | null;
-  totalUsers: number;
+  users: IUser[];
+  onlineUsers: IUser[];
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;

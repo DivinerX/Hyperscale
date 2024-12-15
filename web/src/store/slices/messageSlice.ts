@@ -12,12 +12,12 @@ const initialState: IMessageState = {
 };
 
 export const getMessages = createAsyncThunk('messages/getMessages',
-  async (target: IUser | null) => {
+  async ({ target, page }: { target: IUser | null, page: number }) => {
     if (!target) {
-      const response = await axiosInstance.get(`/api/message/public`);
+      const response = await axiosInstance.get(`/api/message/public?page=${page}`);
       return response.data;
     }
-    const response = await axiosInstance.get(`/api/message/private/${target?.id}`);
+    const response = await axiosInstance.get(`/api/message/private/${target?.id}?page=${page}`);
     return response.data;
   }
 );

@@ -9,12 +9,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { IMessage } from "@/Types";
 import { CommandMessage } from "./CommandMessage";
 
-export const MessageInputContainer: FC<{}> = () => {
+export const MessageInputContainer: FC = () => {
   const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const [message, setMessage] = useState<string>("");
   const user = useSelector((state: RootState) => state.user.user);
   const target = useSelector((state: RootState) => state.messages.target);
-
+  const mode = useSelector((state: RootState) => state.messages.mode);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -90,12 +90,21 @@ export const MessageInputContainer: FC<{}> = () => {
     }
   }
 
+  const commands = ['/WHISPER', '/MUTE', '/GLOBE'];
+
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (message.startsWith('/')) {
         handleCommand();
       } else {
         sendTextMessage();
+      }
+    } else if (e.key === 'Tab' && message.startsWith('/')) {
+      e.preventDefault();
+      const commandPrefix = message.trim();
+      const matchingCommand = commands.find(cmd => cmd.startsWith(commandPrefix.toUpperCase()));
+      if (matchingCommand) {
+        setMessage(matchingCommand);
       }
     }
   }
@@ -150,6 +159,9 @@ export const MessageInputContainer: FC<{}> = () => {
           const username = args[0].replace('@', '');
           handleWhisper(username);
         }
+        else {
+          dispatch(setMode('WHISPER'));
+        }
         break;
       case '/MUTE':
         if (args.length > 0) {
@@ -165,6 +177,7 @@ export const MessageInputContainer: FC<{}> = () => {
         console.log(`Unknown command: ${cmd}`);
         break;
     }
+    setMessage('');
   };
 
   const handleWhisper = (username: string) => {
@@ -178,12 +191,10 @@ export const MessageInputContainer: FC<{}> = () => {
 
   return (
     user ?
-      (<>
-        <CommandMessage
-          message={message}
-        />
-        <MessageInput status={getTypingStatus()} message={message} setMessage={handleMessageChange} onKeyDown={onKeyDown} handleSendMessage={handleSendMessage} handleFileUpload={handleFileUpload} />
-      </>
+      (<div>
+        <CommandMessage message={message} />
+        <MessageInput status={getTypingStatus()} message={message} mode={mode} setMessage={handleMessageChange} onKeyDown={onKeyDown} handleSendMessage={handleSendMessage} handleFileUpload={handleFileUpload} />
+      </div>
       )
       : <Loading />
   );
