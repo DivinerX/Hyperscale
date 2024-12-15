@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { MessageBoard } from "./MessageBoard";
 import { IMessage, IUser } from "@/Types";
 import { AppDispatch, RootState } from "@/store";
@@ -15,6 +15,9 @@ export const MessageBoardContainer: FC = () => {
   const messages: IMessage[] = useSelector((state: RootState) => state.messages.messages);
   const target: IUser | null = useSelector((state: RootState) => state.messages.target);
   const loading = useSelector((state: RootState) => state.messages.loading);
+  const messageBoardRef = useRef<HTMLDivElement | null>(null);
+  
+  const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
     SocketService.on(SocketService.event.sentMessage, (message: IMessage) => {
@@ -29,14 +32,36 @@ export const MessageBoardContainer: FC = () => {
         }
       }
     });
-  }, [dispatch, target])
+
+    const handleScroll = () => {
+      if (messageBoardRef.current) {
+        const { scrollTop } = messageBoardRef.current;
+        if (scrollTop === 0 && !loading) {
+          setCurrentPage(prevPage => prevPage + 1);
+          dispatch(getMessages({ target: target, page: currentPage }));
+        }
+      }
+    };
+
+    const messageBoardElement = messageBoardRef.current;
+    if (messageBoardElement) {
+      messageBoardElement.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (messageBoardElement) {
+        messageBoardElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [dispatch, target, loading, currentPage]);
 
   useEffect(() => {
-    dispatch(getMessages(target));
-  }, [target, dispatch]);
+    dispatch(getMessages({ target: target, page: currentPage }));
+  }, [dispatch, target, currentPage]);
 
   return (
-    loading ? <Loading /> :
-      <MessageBoard messages={messages} user={user} />
+    <div ref={messageBoardRef}>
+      {loading ? <Loading /> : <MessageBoard messages={messages} user={user} />}
+    </div>
   );
 };

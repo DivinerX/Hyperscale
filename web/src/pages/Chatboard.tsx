@@ -4,7 +4,7 @@ import { Chatboard } from "@/components/Chatboard";
 
 export const ChatboardPage: FC = () => {
   return (
-    <div className="bg-black h-full w-full text-xs text-white" >
+    <div className="bg-black h-[100vh] pt-14 w-full text-xs text-white overflow-y-hidden" >
       <HeaderContainer />
       <Chatboard />
     </div >

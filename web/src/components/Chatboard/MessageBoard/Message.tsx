@@ -1,9 +1,15 @@
-import { FC } from "react";
+import { FC, useEffect, useRef } from "react";
 import verified from "@/assets/verified.svg";
 import unverified from "@/assets/unverified.svg";
 import { IMessage, IUser } from "@/Types";
 
 export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user }) => {
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [message]);
+
   return (
     <div key={message.id} className={`flex items-start gap-2 ${message.sender.id === user.id ? "flex-row-reverse justify-start" : ""}`}>
       <img
@@ -35,7 +41,7 @@ export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user 
           ) :
           message.type === "image" ? (
             <div className={`${message.sender.id === user.id ? "flex justify-end" : ""}`}>
-              <img src={message.content} alt="message" className="w-1/2 h-1/2 max-w-1/2 rounded-sm object-cover" />
+              <img src={message.content} alt="message" className="w-1/2 h-auto max-w-[50vw] rounded-sm object-cover" />
             </div>
             ) :
           message.type === "audio" ? (
@@ -44,6 +50,7 @@ export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user 
             </div>
           ) : null
         }
+        <div ref={messageEndRef} />
       </div>
     </div>
   )
