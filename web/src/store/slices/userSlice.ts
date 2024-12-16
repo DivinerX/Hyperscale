@@ -1,8 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { jwtDecode } from "jwt-decode";
 import { storageService } from '@/services/storage';
 import axiosInstance from '@/services/axios';
-import { socketService } from '@/services/socket';
 import { IUserState, ILoginCredentials, ILoginResponse, IDecodedToken, IUser } from '@/Types';
 
 const initialState: IUserState = {
@@ -10,6 +9,7 @@ const initialState: IUserState = {
   users: [],
   onlineUsers: [],
   isAuthenticated: false,
+  mode: 'AUTH',
   loading: false,
   error: null,
 }
@@ -32,7 +32,6 @@ export const loginUser = createAsyncThunk(
       verified: decoded.verified,
     };
 
-    socketService.emit(socketService.event.userIdentify, user);
     return user;
   }
 );
@@ -63,6 +62,10 @@ const userSlice = createSlice({
     },
     setOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
+    },
+    setMode: (state, action: PayloadAction<IUserState['mode']>) => {
+      console.log(`Setting mode to ${action.payload}`);
+      state.mode = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -96,5 +99,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout, clearError, setUser, setOnlineUsers } = userSlice.actions;
+export const { logout, clearError, setUser, setOnlineUsers, setMode } = userSlice.actions;
 export default userSlice.reducer; 

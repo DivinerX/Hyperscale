@@ -1,9 +1,10 @@
 import { io, Socket } from 'socket.io-client';
 
-class SocketService {
+export class SocketService {
   private socket: Socket;
 
   constructor() {
+    console.log("SocketService constructor")
     this.socket = io(import.meta.env.VITE_SOCKET_URL); // Use the socket URL from your .env file
   }
 
@@ -27,5 +28,3 @@ class SocketService {
     this.socket.emit(event, data);
   }
 }
-
-export const socketService = new SocketService();

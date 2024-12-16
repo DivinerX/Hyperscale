@@ -8,7 +8,8 @@ import { isTokenValid } from '@/services/validToken';
 import { setUser } from '@/store/slices/userSlice';
 import { jwtDecode } from 'jwt-decode';
 import { IDecodedToken } from '@/Types';
-import { PrivateRoute } from './components/PrivateRoute';
+import { PrivateRoute } from '@/components/PrivateRoute';
+
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -16,9 +17,6 @@ function App() {
     if (token && isTokenValid(token)) {
       const decoded = jwtDecode<IDecodedToken>(token);
       dispatch(setUser(decoded));
-    }
-
-    return () => {
     }
   }, [dispatch])
 
