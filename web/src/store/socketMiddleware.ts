@@ -17,14 +17,11 @@ export const socketMiddleware = (socket: SocketService) => {
 
     switch (type) {
       // Connect to the socket when a user logs in
-      case 'user/login':
+      case 'user/login/fulfilled':
       case 'user/setUser': {
+        console.log("socket connect")
         socket.connect()
 
-        // Set up all the socket event handlers
-        // When these events are received from the socket, they'll dispatch the proper Redux action
-
-        // Update the online users list every time a user logs in or out
         socket.on(socketEvent.onlineUsers, (onlineUsers: string[]) => {
           dispatch(setOnlineUsers(onlineUsers))
         })
@@ -41,9 +38,7 @@ export const socketMiddleware = (socket: SocketService) => {
           dispatch(updateTypingStatus(data));
         });
 
-        // Add the current user to the online users list
         socket.emit(socketEvent.userIdentify, payload)
-
         break
       }
 
