@@ -7,7 +7,6 @@ export const content = [
 export const theme = {
   extend: {
     colors: {
-      // Add your custom colors here
       primary: {
         50: '#f0f9ff',
         100: '#e0f2fe',
@@ -20,22 +19,21 @@ export const theme = {
         800: '#075985',
         900: '#0c4a6e',
       },
+      textColor: {
+        DEFAULT: '#ffffff',
+      },
     },
     fontFamily: {
       sans: ['DM Mono'],
-      fontSize: {
-        base: '8px',
-      },
-      fontWeight: {
-        light: 300,
-      },
     },
-    spacing: {
-      // Add custom spacing if needed
+    fontSize: {
+      base: '8px',
+    },
+    fontWeight: {
+      light: 300,
     },
     screens: {
       'xs': '475px',
-      // Default breakpoints
       'sm': '640px',
       'md': '768px',
       'lg': '1024px',
@@ -46,5 +44,5 @@ export const theme = {
 };
 export const plugins = [];
 export const corePlugins = {
-  // preflight: false,
+  preflight: false,
 };

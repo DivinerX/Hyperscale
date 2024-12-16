@@ -56,3 +56,13 @@ export interface IHolding {
   priceUSD: number;
   ROI: number;
 }
+
+export const socketEvent = {
+  onlineUsers: "onlineUsers",
+  checkUsers: "checkUsers",
+  userIdentify: "userIdentify",
+  userMessage: "userMessage",
+  sentMessage: "sentMessage",
+  serverMessage: "serverMessage",
+  userTyping: "userTyping",
+}

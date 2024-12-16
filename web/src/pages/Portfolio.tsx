@@ -1,12 +1,9 @@
-import { FC } from "react";
-import { HeaderContainer } from "@/components/Header/HeaderContainer";
-import { Portfolio } from "@/components/Portfolio";
+import { FC } from 'react';
 
 export const PortfolioPage: FC = () => {
   return (
-    <div className="bg-black h-[100vh] pt-14 w-full text-xs text-white overflow-y-hidden" >
-      <HeaderContainer />
-      <Portfolio />
-    </div >
+    <div>
+      <h1>Portfolio Page </h1>
+    </div>
   )
 };

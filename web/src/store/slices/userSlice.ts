@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { jwtDecode } from "jwt-decode";
 import { storageService } from '@/services/storage';
 import axiosInstance from '@/services/axios';
-import { SocketService } from '@/services/socket';
+import { socketService } from '@/services/socket';
 import { IUserState, ILoginCredentials, ILoginResponse, IDecodedToken, IUser } from '@/Types';
 
 const initialState: IUserState = {
@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
       verified: decoded.verified,
     };
 
-    SocketService.emit(SocketService.event.userIdentify, user);
+    socketService.emit(socketService.event.userIdentify, user);
     return user;
   }
 );

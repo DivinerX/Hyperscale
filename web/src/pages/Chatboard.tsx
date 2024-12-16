@@ -1,12 +1,9 @@
-import { FC } from "react";
-import { HeaderContainer } from "@/components/Header/HeaderContainer";
-import { Chatboard } from "@/components/Chatboard";
+import { FC } from 'react';
 
 export const ChatboardPage: FC = () => {
   return (
-    <div className="bg-black h-[100vh] pt-14 w-full text-xs text-white overflow-y-hidden" >
-      <HeaderContainer />
-      <Chatboard />
-    </div >
+    <div>
+      <h1>Chatboard Page</h1>
+    </div>
   )
 };

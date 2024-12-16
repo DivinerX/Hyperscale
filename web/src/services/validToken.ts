@@ -1,6 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 
-export const validateToken = (token: string) => {
+export const isTokenValid = (token: string) => {
   try {
     if (!token) return false;
     const decoded = jwtDecode<{ exp?: number }>(token);
