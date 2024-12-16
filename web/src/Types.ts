@@ -9,7 +9,7 @@ export interface IMessage {
 }
 
 export interface IMessageState {
-  mode: 'WHISPER' | 'GLOBAL';
+  mode: 'WHISPER' | 'GLOBAL' | 'PORTFOLIO';
   target: IUser | null;
   messages: IMessage[];
   loading: boolean;
@@ -48,4 +48,11 @@ export interface IUserState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+}
+
+export interface IHolding {
+  assets: string;
+  holding: number;
+  priceUSD: number;
+  ROI: number;
 }

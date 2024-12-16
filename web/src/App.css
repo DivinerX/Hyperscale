@@ -36,3 +36,7 @@ html, body {
   scrollbar-width: thin;
   scrollbar-color: #D9D9D9 transparent;
 }
+
+input, select {
+  outline: none;
+}

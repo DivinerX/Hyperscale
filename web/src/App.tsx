@@ -19,7 +19,7 @@ function App() {
     if (token && validateToken(token)) {
       const decoded = jwtDecode<IDecodedToken>(token);
       dispatch(setUser(decoded));
-      SocketService.emit(SocketService.event.userIdentify, {id: decoded.sub, username: decoded.username});
+      SocketService.emit(SocketService.event.userIdentify, { id: decoded.sub, username: decoded.username });
     }
 
     return () => {
