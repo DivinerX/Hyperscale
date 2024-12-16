@@ -1,56 +1,38 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 import { MessageInput } from "./MessageInput";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { Loading } from "@/components/Loading";
-import { SocketService } from "@/services/socket";
-import { addMessage, setMode, setWhisper } from '@/store/slices/messageSlice';
+import { sendMessage, setTarget, setWhisper, typing } from '@/store/slices/messageSlice';
+import { setMode } from '@/store/slices/userSlice';
 import { v4 as uuidv4 } from 'uuid';
 import { IMessage } from "@/Types";
 import { CommandMessage } from "./CommandMessage";
 
 export const MessageInputContainer: FC = () => {
-  const [typingUsers, setTypingUsers] = useState<Set<string>>(new Set());
   const [message, setMessage] = useState<string>("");
   const user = useSelector((state: RootState) => state.user.user);
   const target = useSelector((state: RootState) => state.messages.target);
-  const mode = useSelector((state: RootState) => state.messages.mode);
+  const mode = useSelector((state: RootState) => state.user.mode);
+  const typingUsers = useSelector((state: RootState) => state.messages.typingUsers);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  useEffect(() => {
-    const handleTypingStatus = (data: { username: string; isTyping: boolean }) => {
-      setTypingUsers(prev => {
-        const newSet = new Set(prev);
-        if (data.isTyping) {
-          newSet.add(data.username);
-        } else {
-          newSet.delete(data.username);
-        }
-        return newSet;
-      });
-    };
-
-    SocketService.on(SocketService.event.userTyping, handleTypingStatus);
-    return () => {
-      SocketService.off(SocketService.event.userTyping, handleTypingStatus);
-    };
-  }, []);
 
   let typingTimeout: NodeJS.Timeout;
   const notifyTyping = () => {
-    SocketService.emit(SocketService.event.userTyping, {
-      username: user?.username,
+    dispatch(typing({
+      username: user!.username,
       isTyping: true
-    });
+    }));
 
     if (typingTimeout) clearTimeout(typingTimeout);
 
     typingTimeout = setTimeout(() => {
-      SocketService.emit(SocketService.event.userTyping, {
-        username: user?.username,
+      dispatch(typing({
+        username: user!.username,
         isTyping: false
-      });
+      }));
     }, 2000);
   };
 
@@ -62,7 +44,7 @@ export const MessageInputContainer: FC = () => {
   };
 
   const getTypingStatus = () => {
-    const typingUsersArray = Array.from(typingUsers).filter(username => username !== user?.username);
+    const typingUsersArray = typingUsers.filter(username => username !== user?.username);
     if (typingUsersArray.length === 0) return "";
     if (typingUsersArray.length === 1) return `${typingUsersArray[0]} is typing...`;
     if (typingUsersArray.length === 2) return `${typingUsersArray[0]} and ${typingUsersArray[1]} are typing...`;
@@ -85,8 +67,7 @@ export const MessageInputContainer: FC = () => {
         status: "pending",
         timestamp: new Date().toISOString(),
       };
-      dispatch(addMessage(newMessage as IMessage));
-      SocketService.emit(SocketService.event.userMessage, newMessage);
+      dispatch(sendMessage(newMessage as IMessage));
       setMessage('');
     }
   }
@@ -140,8 +121,7 @@ export const MessageInputContainer: FC = () => {
             timestamp: new Date().toISOString(),
           };
 
-          dispatch(addMessage(newMessage as IMessage));
-          SocketService.emit(SocketService.event.userMessage, newMessage);
+          dispatch(sendMessage(newMessage as IMessage));
         };
         reader.readAsDataURL(file);
       } else {
@@ -173,11 +153,13 @@ export const MessageInputContainer: FC = () => {
       case '/GLOBE':
         console.log('Switching to global mode');
         dispatch(setMode('GLOBAL'));
+        dispatch(setTarget(null));
         break
       case '/PORTFOLIO':
         console.log('Switching to portfolio mode');
         navigate('/portfolio');
         dispatch(setMode('PORTFOLIO'));
+        dispatch(setTarget(null));
         break
       default:
         console.log(`Unknown command: ${cmd}`);
@@ -197,10 +179,10 @@ export const MessageInputContainer: FC = () => {
 
   return (
     user ?
-      (<div>
+      (<>
         <CommandMessage message={message} />
         <MessageInput status={getTypingStatus()} message={message} mode={mode} setMessage={handleMessageChange} onKeyDown={onKeyDown} handleSendMessage={handleSendMessage} handleFileUpload={handleFileUpload} />
-      </div>
+      </>
       )
       : <Loading />
   );

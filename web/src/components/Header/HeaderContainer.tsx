@@ -1,10 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { Header } from "./Header";
-import { SocketService } from "@/services/socket";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
-import { Loading } from "@/components/Loading";
-import { getAllUsers, setOnlineUsers } from "@/store/slices/userSlice";
+import { getAllUsers } from "@/store/slices/userSlice";
 
 export const HeaderContainer: FC = () => {
   const [builtDate] = useState('2023-11-02 20:35');
@@ -27,20 +25,22 @@ export const HeaderContainer: FC = () => {
 
   useEffect(() => {
     dispatch(getAllUsers());
-    SocketService.emit(SocketService.event.checkUsers, user);
-  }, [dispatch, user])
-
-  useEffect(() => {
-    SocketService.on(SocketService.event.onlineUsers, (data) => {
-      console.log("online users", data);
-      dispatch(setOnlineUsers(data))
-    })
+    // socketService.emit(socketEvent.checkUsers, user);
   }, [dispatch])
 
+  useEffect(() => {
+    // socketService.on(socketEvent.onlineUsers, (data) => {
+    //   dispatch(setOnlineUsers(data))
+    // })
+
+    // return () => {
+    //   socketService.off(socketEvent.onlineUsers, (data) => {
+    //     dispatch(setOnlineUsers(data))
+    //   })
+    // }
+  }, [])
+
   return (
-    user ?
-      <Header onlineUsers={onlineUsers} totalUsers={users ? users.length : 0} builtDate={builtDate} version={version} user={user} currentTime={currentTime} />
-      : <Loading />
+    <Header onlineUsers={onlineUsers} totalUsers={users ? users.length : 0} builtDate={builtDate} version={version} user={user} currentTime={currentTime} />
   );
 };
-

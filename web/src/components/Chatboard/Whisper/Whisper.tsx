@@ -11,10 +11,7 @@ export const Whisper: FC<{
   setSearch: (search: string) => void 
 }> = ({ users, target, setTarget, getLastMessage, getLastMessageTime, search, setSearch }) => {
   return (
-    <div className="h-full border-l-[0.25px] border-[#858585]">
-      <div className="h-8 sticky top-0 border-b-[0.25px] border-[#858585] bg-[#0c0c0c]">
-        <span className="flex items-center h-full px-4 capitalize">WHISPER</span>
-      </div>
+    <div className="h-full overflow-y-auto border-l-[0.25px] border-[#858585]">
       <div className="h-16 p-4 flex items-center justify-center border-b-[0.25px] border-[#858585]">
         <input
           type="text"

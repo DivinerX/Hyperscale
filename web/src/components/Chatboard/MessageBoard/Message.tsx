@@ -11,7 +11,7 @@ export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user 
   }, [message]);
 
   return (
-    <div key={message.id} className={`flex items-start gap-2 ${message.sender.id === user.id ? "flex-row-reverse justify-start" : ""}`}>
+    <div key={message.id} className={`flex items-start gap-2 p-2 ${message.sender.id === user.id ? "flex-row-reverse justify-start" : ""}`}>
       <img
         src={message.sender.avatar}
         alt={message.sender.username}
@@ -19,7 +19,7 @@ export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user 
       />
       <div className="flex flex-col gap-1">
         <div className={`flex items-center gap-2 ${message.sender.id === user.id ? "flex-row-reverse" : ""}`}>
-          <span>@{message.sender.username}</span>
+          <span className="text-xs">@{message.sender.username}</span>
           <img src={message.sender.verified ? verified : unverified} alt={message.sender.verified ? "verified" : "unverified"} className="w-4 h-4" />
           <span className="text-xs text-gray-500">
             {new Date(message.timestamp).toLocaleString('en-US', {
@@ -35,7 +35,7 @@ export const Message: FC<{ message: IMessage, user: IUser }> = ({ message, user 
         </div>
         {
           message.type === "text" ? (
-            <div className={`${message.sender.id === user.id ? "text-right" : ""}`}>
+            <div className={`text-xs ${message.sender.id === user.id ? "text-right" : ""}`}>
               {message.content}
             </div>
           ) :

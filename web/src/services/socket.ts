@@ -1,77 +1,30 @@
 import { io, Socket } from 'socket.io-client';
-import { storageService } from '@/services/storage';
 
 export class SocketService {
-  private static socket: Socket | null = null;
+  private socket: Socket;
 
-  private constructor() {
+  constructor() {
+    console.log("SocketService constructor")
+    this.socket = io(import.meta.env.VITE_SOCKET_URL); // Use the socket URL from your .env file
   }
 
-  public static event = {
-    onlineUsers: "onlineUsers",
-    checkUsers: "checkUsers",
-    userIdentify: "userIdentify",
-    userMessage: "userMessage",
-    sentMessage: "sentMessage",
-    serverMessage: "serverMessage",
-    userTyping: "userTyping",
+  public connect() {
+    this.socket.connect();
   }
 
-  public static init(): void {
-    if (!this.socket) {
-      const socketUrl = import.meta.env.VITE_SOCKET_URL;
-      const token = storageService.getItem('token');
-      
-      this.socket = io(socketUrl, {
-        auth: {
-          token: token
-        },
-        transports: ['websocket', 'polling'],
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        timeout: 5000,
-        query: {
-          token: token
-        }
-      });
-      
-      this.socket.on('connect', () => {
-        console.log('socket connected');
-      });
-
-      this.socket.on('disconnect', () => {
-        console.log('socket disconnected');
-      });
-    }
+  public disconnect() {
+    this.socket.disconnect();
   }
 
-  public static getSocket(): Socket | null {
-    return this.socket;
+  public on(event: string, callback: (data: any) => void) {
+    this.socket.on(event, callback);
   }
 
-  public static disconnect(): void {
-    if (this.socket) {
-      this.socket.disconnect();
-      this.socket = null;
-    }
+  public off(event: string, callback: (data: any) => void) {
+    this.socket.off(event, callback);
   }
 
-  public static emit(event: string, data: any): void {
-    if (this.socket) {
-      this.socket.emit(event, data);
-    }
-  }
-  
-  public static off(event: string, callback: (...args: any[]) => void): void {
-    if (this.socket) {
-      this.socket.off(event, callback);
-    }
-  }
-
-  public static on(event: string, callback: (...args: any[]) => void): void {
-    if (this.socket) {
-      this.socket.on(event, callback);
-    }
+  public emit(event: string, data: any) {
+    this.socket.emit(event, data);
   }
 }

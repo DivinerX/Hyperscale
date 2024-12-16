@@ -9,9 +9,10 @@ export interface IMessage {
 }
 
 export interface IMessageState {
-  mode: 'WHISPER' | 'GLOBAL' | 'PORTFOLIO';
   target: IUser | null;
   messages: IMessage[];
+  inputHeight: number;
+  typingUsers: string[];
   loading: boolean;
   error: string | null;
 }
@@ -46,6 +47,7 @@ export interface IUserState {
   users: IUser[];
   onlineUsers: IUser[];
   isAuthenticated: boolean;
+  mode: 'WHISPER' | 'GLOBAL' | 'PORTFOLIO' | 'AUTH';
   loading: boolean;
   error: string | null;
 }
@@ -53,6 +55,17 @@ export interface IUserState {
 export interface IHolding {
   assets: string;
   holding: number;
-  priceUSD: number;
-  ROI: number;
+  price: number;
+  ROI: number | null;
+  image: string | null;
+}
+
+export const socketEvent = {
+  onlineUsers: "onlineUsers",
+  checkUsers: "checkUsers",
+  userIdentify: "userIdentify",
+  userMessage: "userMessage",
+  sentMessage: "sentMessage",
+  serverMessage: "serverMessage",
+  userTyping: "userTyping",
 }

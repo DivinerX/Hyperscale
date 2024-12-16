@@ -8,14 +8,14 @@ interface HeaderProps {
   totalUsers: number;
   builtDate: string;
   version: string;
-  user: IUser;
+  user: IUser | null;
   currentTime: string;
 }
 
 export const Header: FC<HeaderProps> = ({ onlineUsers, totalUsers, builtDate, version, user, currentTime }) => {
 
   return (
-    <header className="bg-black fixed top-0 z-10 w-full text-white px-2 py-2 flex justify-between items-center text-xs border-b-[0.25px] border-[#858585] h-14">
+    <header className="bg-black fixed top-0 z-10 w-full text-white px-2 py-2 flex justify-between items-center text-xs border-b-[0.25px] border-[#858585] h-14 mb-14">
       <div className="flex gap-2">
         <div className="flex items-center justify-center pl-1">
           <img src={logo} alt="logo" className="w-8 h-8" />
@@ -40,15 +40,17 @@ export const Header: FC<HeaderProps> = ({ onlineUsers, totalUsers, builtDate, ve
         </div>
       </div>
       {/* right side of the header */}
-      <div className="flex items-center gap-1">
-        <div className="flex flex-col justify-center items-end px-3">
-          <span className="text-[#8D8D8D] uppercase">logged in as</span>
-          <span className="flex items-center gap-1">{`${user.username}`} <img src={user.verified ? verified : unverified} alt="verified" className="w-4 h-4" /></span>
+      {user && (
+        <div className="flex items-center gap-1">
+          <div className="flex flex-col justify-center items-end px-3">
+            <span className="text-[#8D8D8D] uppercase">logged in as</span>
+            <span className="flex items-center gap-1">{`${user.username}`} <img src={user.verified ? verified : unverified} alt="verified" className="w-4 h-4" /></span>
+          </div>
+          <div>
+            <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-sm" />
+          </div>
         </div>
-        <div>
-          <img src={user.avatar} alt="avatar" className="w-10 h-10 rounded-sm" />
-        </div>
-      </div>
+      )}
     </header>
   );
 };

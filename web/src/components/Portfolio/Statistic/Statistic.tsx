@@ -34,12 +34,12 @@ export const Statistic: FC = () => {
             {lifetimeReturnsTrend === 'up' ?
               <>
                 <TbTriangleFilled className="text-[#76FF36]" />
-                <span className="text-[#76FF36]">{renderNumber(lifetimeReturnsPercentage)}%</span>
+                <span className="text-[#76FF36] text-xs">{renderNumber(lifetimeReturnsPercentage)}%</span>
               </>
               :
               <>
                 <TbTriangleInvertedFilled className="text-red-500" />
-                <span className="text-red-500">{renderNumber(lifetimeReturnsPercentage)}%</span>
+                <span className="text-red-500 text-xs">{renderNumber(lifetimeReturnsPercentage)}%</span>
               </>
             }
 

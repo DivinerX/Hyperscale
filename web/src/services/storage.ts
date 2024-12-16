@@ -4,7 +4,7 @@ export const storageService = {
   },
 
   getItem(key: string) {
-    return localStorage.getItem(key);
+    return localStorage.getItem(key) || '';
   },
 
   removeItem(key: string) {

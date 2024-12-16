@@ -1,4 +1,7 @@
-import { FC, useRef } from "react";
+import { AppDispatch } from "@/store";
+import { FC, useRef, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setInputHeight } from "@/store/slices/messageSlice";
 
 interface MessageInputProps {
   status: string;
@@ -12,6 +15,27 @@ interface MessageInputProps {
 
 export const MessageInput: FC<MessageInputProps> = ({ status, message, mode, setMessage, onKeyDown, handleSendMessage, handleFileUpload }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const divRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (divRef.current) {
+      const updateHeight = () => {
+        if (divRef.current) {
+          dispatch(setInputHeight(divRef.current.offsetHeight));
+        }
+      };
+
+      const resizeObserver = new ResizeObserver(updateHeight);
+      resizeObserver.observe(divRef.current);
+
+      updateHeight();
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, [dispatch]);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -24,7 +48,7 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, mode, set
   };
 
   return (
-    <div className={`fixed bottom-0 left-0 bg-[#0A0A0A] border-gray-800 border-t px-4 py-2 ${mode === 'WHISPER' ? 'w-3/4' : 'w-full'}`}>
+    <div ref={divRef} className={`fixed bottom-0 left-0 bg-[#0A0A0A] border-gray-800 border-t mt-[${0}px] px-4 py-2 ${mode === 'WHISPER' ? 'w-3/4' : 'w-full'}`}>
       <span className="text-sm text-gray-500 block mb-2">{status}</span>
       <div className="flex items-center bg-black border-[0.25px] border-gray-800">
         <input
@@ -33,7 +57,7 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, mode, set
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={onKeyDown}
-          className="flex-1 bg-black px-3 py-1 focus:outline-0"
+          className="flex-1 bg-black px-3 py-1 text-sm focus:outline-0"
         />
         <button
           onClick={() => fileInputRef.current?.click()}

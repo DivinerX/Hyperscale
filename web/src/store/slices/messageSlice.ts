@@ -4,9 +4,10 @@ import axiosInstance from '@/services/axios';
 import { toast } from 'react-toastify';
 
 const initialState: IMessageState = {
-  mode: 'GLOBAL',
   target: null,
   messages: [],
+  typingUsers: [],
+  inputHeight: 0,
   loading: false,
   error: null,
 };
@@ -38,19 +39,38 @@ const messageSlice = createSlice({
     addMessage: (state, action: PayloadAction<IMessage>) => {
       state.messages = [...state.messages, action.payload];
     },
+    receiveMessage: (state, action: PayloadAction<IMessage>) => {
+      state.messages = [...state.messages, action.payload];
+    },
+    sendMessage: (state, action: PayloadAction<IMessage>) => {
+      state.messages = [...state.messages, action.payload];
+    },
     updateMessageStatus: (state, action: PayloadAction<{ id: string; status: IMessage['status'] }>) => {
       const message = state.messages.find(msg => msg.id === action.payload.id);
       if (message) {
         message.status = action.payload.status;
       }
     },
+    updateTypingStatus: (state, action: PayloadAction<{ username: string; isTyping: boolean }>) => {
+      const newSet = new Set(state.typingUsers);
+      if (action.payload.isTyping) {
+        newSet.add(action.payload.username);
+      } else {
+        newSet.delete(action.payload.username);
+      }
+      state.typingUsers = Array.from(newSet);
+    },
+    typing: (state, action: PayloadAction<{ username: string; isTyping: boolean }>) => {
+
+    },
     setMessages: (state, action: PayloadAction<IMessage[]>) => {
       state.messages = action.payload;
     },
-    setMode: (state, action: PayloadAction<IMessageState['mode']>) => {
-      console.log(`Setting mode to ${action.payload}`);
-      state.mode = action.payload;
-      if (action.payload === 'GLOBAL') state.target = null;
+    setInputHeight: (state, action: PayloadAction<number>) => {
+      state.inputHeight = action.payload;
+    },
+    setTarget: (state, action: PayloadAction<IUser | null>) => {
+      state.target = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -67,14 +87,12 @@ const messageSlice = createSlice({
       toast.error('Failed to load messages');
     });
     builder.addCase(setWhisper.fulfilled, (state, action) => {
-      state.mode = 'WHISPER';
       state.target = action.payload;
       toast.success(`Whispering to ${action.payload.username}`);
     });
     builder.addCase(setWhisper.rejected, (state, action) => {
       state.error = action.error.message || null;
       state.target = null;
-      state.mode = 'GLOBAL';
       state.loading = false;
       toast.error('Failed to set whisper');
     });
@@ -84,5 +102,5 @@ const messageSlice = createSlice({
   },
 });
 
-export const { addMessage, updateMessageStatus, setMessages, setMode } = messageSlice.actions;
+export const { addMessage, updateTypingStatus, typing, updateMessageStatus, setMessages, setInputHeight, receiveMessage, sendMessage, setTarget } = messageSlice.actions;
 export default messageSlice.reducer; 
