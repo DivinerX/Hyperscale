@@ -15,7 +15,7 @@ export function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/chat');
+      navigate('/');
     }
   }, [isAuthenticated, navigate]);
 

@@ -10,6 +10,10 @@ export const CommandMessage: FC<CommandMessageProps> = ({ message }) => {
       discription: "VIEW LIVE AIRDROP GLOBE",
       params: false,
     },
+    "/PORTFOLIO": {
+      discription: "VIEW PORTFOLIO",
+      params: false,
+    },
     "/DASHBOARD": {
       discription: "VIEW DASHBOARD",
       params: false,

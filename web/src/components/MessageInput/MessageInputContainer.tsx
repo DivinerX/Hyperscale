@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from "react";
 import { MessageInput } from "./MessageInput";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
+import { useNavigate } from "react-router-dom";
 import { Loading } from "@/components/Loading";
 import { SocketService } from "@/services/socket";
 import { addMessage, setMode, setWhisper } from '@/store/slices/messageSlice';
@@ -16,7 +17,7 @@ export const MessageInputContainer: FC = () => {
   const target = useSelector((state: RootState) => state.messages.target);
   const mode = useSelector((state: RootState) => state.messages.mode);
   const dispatch = useDispatch<AppDispatch>();
-
+  const navigate = useNavigate();
   useEffect(() => {
     const handleTypingStatus = (data: { username: string; isTyping: boolean }) => {
       setTypingUsers(prev => {
@@ -90,7 +91,7 @@ export const MessageInputContainer: FC = () => {
     }
   }
 
-  const commands = ['/WHISPER', '/MUTE', '/GLOBE'];
+  const commands = ['/WHISPER', '/MUTE', '/GLOBE', '/PORTFOLIO'];
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -172,6 +173,11 @@ export const MessageInputContainer: FC = () => {
       case '/GLOBE':
         console.log('Switching to global mode');
         dispatch(setMode('GLOBAL'));
+        break
+      case '/PORTFOLIO':
+        console.log('Switching to portfolio mode');
+        navigate('/portfolio');
+        dispatch(setMode('PORTFOLIO'));
         break
       default:
         console.log(`Unknown command: ${cmd}`);

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { MessageBoardContainer } from "./MessageBoard/MessageBoardContainer";
-import { MessageInputContainer } from "./MessageInput/MessageInputContainer";
+import { MessageInputContainer } from "../MessageInput/MessageInputContainer";
 import { WhisperContainer } from "./Whisper/WhisperContainer";
 import { TerminalContainer } from "../Terminal/TerminalContainer";
 import { RootState } from "@/store";

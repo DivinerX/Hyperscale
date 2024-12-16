@@ -47,7 +47,7 @@ const messageSlice = createSlice({
     setMessages: (state, action: PayloadAction<IMessage[]>) => {
       state.messages = action.payload;
     },
-    setMode: (state, action: PayloadAction<"GLOBAL" | "WHISPER">) => {
+    setMode: (state, action: PayloadAction<IMessageState['mode']>) => {
       console.log(`Setting mode to ${action.payload}`);
       state.mode = action.payload;
       if (action.payload === 'GLOBAL') state.target = null;
