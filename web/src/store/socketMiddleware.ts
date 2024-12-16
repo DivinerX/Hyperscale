@@ -58,6 +58,12 @@ export const socketMiddleware = (socket: SocketService) => {
 
         break
       }
+
+      case 'user/allUsers': {
+        socket.emit(socketEvent.checkUsers, payload)
+        break
+      }
+
       // Let the server be the source of truth for all messages; don't dispatch anything
       case 'messages/sendMessage': {
         socket.emit(socketEvent.userMessage, payload)
