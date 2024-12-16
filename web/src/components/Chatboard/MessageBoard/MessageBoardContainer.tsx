@@ -22,10 +22,10 @@ export const MessageBoardContainer: FC = () => {
     const handleScroll = () => {
       if (messageBoardRef.current) {
         const { scrollTop } = messageBoardRef.current;
-        // if (scrollTop === 0 && !loading) {
-        //   setCurrentPage(prevPage => prevPage + 1);
-        //   dispatch(getMessages({ target: target, page: currentPage }));
-        // }
+        if (scrollTop === 0 && !loading) {
+          setCurrentPage(prevPage => prevPage + 1);
+          // dispatch(getMessages({ target: target, page: currentPage }));
+        }
       }
     };
 

@@ -61,7 +61,7 @@ const messageSlice = createSlice({
       state.typingUsers = Array.from(newSet);
     },
     typing: (state, action: PayloadAction<{ username: string; isTyping: boolean }>) => {
-
+      console.log("typing", state, action.payload)
     },
     setMessages: (state, action: PayloadAction<IMessage[]>) => {
       state.messages = action.payload;
