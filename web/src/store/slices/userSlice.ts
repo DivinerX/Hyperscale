@@ -64,7 +64,6 @@ const userSlice = createSlice({
       state.onlineUsers = action.payload;
     },
     setMode: (state, action: PayloadAction<IUserState['mode']>) => {
-      console.log(`Setting mode to ${action.payload}`);
       state.mode = action.payload;
     },
   },

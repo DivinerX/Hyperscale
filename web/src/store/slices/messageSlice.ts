@@ -26,7 +26,11 @@ export const getMessages = createAsyncThunk('messages/getMessages',
 export const setWhisper = createAsyncThunk('messages/setWhisper',
   async (username: string) => {
     if (username) {
-      const response = await axiosInstance.get(`/api/user/username/${username}`);
+      const response = await axiosInstance.get(`/api/user/username/${username}`, {
+        params: {
+          "symbol": "bitcoin",
+        },
+      });
       return response.data;
     }
   }
@@ -61,7 +65,9 @@ const messageSlice = createSlice({
       state.typingUsers = Array.from(newSet);
     },
     typing: (state, action: PayloadAction<{ username: string; isTyping: boolean }>) => {
-      console.log("typing", state, action.payload)
+      if (state.typingUsers.includes(action.payload.username)) {
+        return;
+      }
     },
     setMessages: (state, action: PayloadAction<IMessage[]>) => {
       state.messages = action.payload;

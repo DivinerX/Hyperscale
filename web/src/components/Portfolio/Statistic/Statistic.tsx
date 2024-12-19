@@ -1,21 +1,14 @@
+import { renderNumber } from "@/services/renderNumber";
 import { FC } from "react";
 import { TbTriangleFilled, TbTriangleInvertedFilled } from "react-icons/tb";
 
-export const Statistic: FC = () => {
-
-  const netWorth = 10000;
-  const realWorldInvestment = 10000;
-  const lifetimeReturns = 100;
-  const lifetimeReturnsPercentage = 1021.21;
-  const lifetimeReturnsTrend: 'up' | 'down' = 'up';
-
-  const renderNumber = (number: number) => {
-    return number.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
+export const Statistic: FC<{
+  netWorth: number;
+  realWorldInvestment: number;
+  lifetimeReturns: number;
+  lifetimeReturnsPercentage: number;
+  lifetimeReturnsTrend: 'up' | 'down';
+}> = ({ netWorth, realWorldInvestment, lifetimeReturns, lifetimeReturnsPercentage, lifetimeReturnsTrend }) => {
   return (
     <div className="flex flex-row w-full border border-[#474747] p-3 items-center">
       <div className="flex flex-col">
@@ -47,7 +40,7 @@ export const Statistic: FC = () => {
           <span
             className={`text-xs ${lifetimeReturnsTrend === 'up' ? 'text-[#76FF36]' : 'text-red-500'} uppercase pl-2`}
           >
-            ${renderNumber(lifetimeReturns)}
+            {lifetimeReturns < 0 ? `-$${renderNumber(Math.abs(lifetimeReturns))}` : `+$${renderNumber(lifetimeReturns)}`}
           </span>
         </div>
       </div>

@@ -19,7 +19,6 @@ export const socketMiddleware = (socket: SocketService) => {
       // Connect to the socket when a user logs in
       case 'user/login/fulfilled':
       case 'user/setUser': {
-        console.log("socket connect")
         socket.connect()
 
         socket.on(socketEvent.onlineUsers, (onlineUsers: string[]) => {
