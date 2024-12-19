@@ -67,7 +67,7 @@ export const Holding: FC<{
                       <td className="text-xs text-white py-2">{coin.amount} <span className="text-xs text-[#808080]">{coin.symbol}</span></td>
                       <td className="text-xs text-white py-2">${renderPrice(coin.price)}</td>
                       <td className="text-xs text-white py-2">${renderPrice(coin.price * coin.amount)}</td>
-                      <td className={`text-xs py-2 ${coin.ROI && coin.ROI > 0 ? 'text-[#76FF36]' : 'text-[#FF3636]'}`}>{coin.ROI ? `${coin.ROI}%` : '-'}</td>
+                      <td className={`text-xs py-2 ${coin.ROI && coin.ROI > 0 ? 'text-[#76FF36]' : 'text-[#FF3636]'}`}>{coin.ROI === undefined ? '-' : `${(coin.ROI * 100).toFixed(3)}%`}</td>
                     </tr>
                   ))}
               </tbody>
