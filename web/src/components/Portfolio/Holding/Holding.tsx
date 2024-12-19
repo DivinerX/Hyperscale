@@ -1,17 +1,17 @@
-import { IHolding } from "@/Types";
+import { renderPrice } from "@/services/renderNumber";
+import { ICoinInfo } from "@/Types";
 import { FC } from "react";
 
 export const Holding: FC<{
   activeHoldings: 'list' | 'chart',
   setActiveHoldings: (activeHoldings: 'list' | 'chart') => void,
-  holdingList: IHolding[],
-  renderPrice: (price: number) => string,
+  coinInfo: ICoinInfo[],
   searchHolding: string,
   setSearchHolding: (searchHolding: string) => void,
   sortBy: 'assets' | 'value' | 'price' | 'ROI',
   setSortBy: (sortBy: 'assets' | 'value' | 'price' | 'ROI') => void,
 }> = ({
-  activeHoldings, setActiveHoldings, holdingList, renderPrice, searchHolding, setSearchHolding, sortBy, setSortBy
+  activeHoldings, setActiveHoldings, coinInfo, searchHolding, setSearchHolding, sortBy, setSortBy
 }) => {
     return (
       <div className="w-5/12 border border-white/10 flex flex-col h-[450px]">
@@ -52,22 +52,22 @@ export const Holding: FC<{
                 </tr>
               </thead>
               <tbody>
-                {holdingList.filter((holding) =>
-                  holding.assets.toLowerCase().includes(searchHolding.toLowerCase())
+                {coinInfo.filter((coin) =>
+                  coin.symbol.toLowerCase().includes(searchHolding.toLowerCase())
                 ).sort((a, b) => {
-                  if (sortBy === 'assets') return a.assets.localeCompare(b.assets);
-                  if (sortBy === 'value') return b.price * b.holding - a.price * a.holding;
+                  if (sortBy === 'assets') return a.symbol.localeCompare(b.symbol);
+                  if (sortBy === 'value') return b.price * b.amount - a.price * a.amount;
                   if (sortBy === 'price') return b.price - a.price;
                     if (sortBy === 'ROI') return (b.ROI || 0) - (a.ROI || 0);
                     return 0;
-                  }).map((holding, index) => (
+                  }).map((coin, index) => (
                     <tr className={`border-b border-[#171717] hover:bg-[#464646] cursor-pointer py-2 ${index % 2 === 0 ? 'bg-[#D9D9D905]' : 'bg-[#0C0C0C]'}`} key={index}>
-                      <td className="text-sm text-white py-2 pl-2"><span className="text-xs">#{index + 1}</span></td>
-                      <td className="text-sm text-white py-2 flex flex-row items-center gap-1"><img src={holding.image || ''} alt={holding.assets} className="rounded-full w-5 h-5" /> {holding.assets}</td>
-                      <td className="text-sm text-white py-2">{holding.holding} <span className="text-xs text-[#808080]">{holding.assets}</span></td>
-                      <td className="text-sm text-white py-2"><span className="text-xs">${renderPrice(holding.price)}</span></td>
-                      <td className="text-sm text-white py-2"><span className="text-xs">${renderPrice(holding.price * holding.holding)}</span></td>
-                      <td className={`text-sm text-white py-2 ${holding.ROI && holding.ROI > 0 ? 'text-[#76FF36]' : 'text-[#FF3636]'}`}>{holding.ROI ? holding.ROI : '-'}%</td>
+                      <td className="text-xs text-white/50 py-2 pl-2">#{index + 1}</td>
+                      <td className="text-xs text-white py-2 flex flex-row items-center gap-1"><img src={coin.image || ''} alt={coin.symbol} className="rounded-full w-6 h-6" /> {coin.symbol}</td>
+                      <td className="text-xs text-white py-2">{coin.amount} <span className="text-xs text-[#808080]">{coin.symbol}</span></td>
+                      <td className="text-xs text-white py-2">${renderPrice(coin.price)}</td>
+                      <td className="text-xs text-white py-2">${renderPrice(coin.price * coin.amount)}</td>
+                      <td className={`text-xs py-2 ${coin.ROI && coin.ROI > 0 ? 'text-[#76FF36]' : 'text-[#FF3636]'}`}>{coin.ROI ? `${coin.ROI}%` : '-'}</td>
                     </tr>
                   ))}
               </tbody>

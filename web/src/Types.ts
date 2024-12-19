@@ -1,3 +1,5 @@
+import { AxisScale } from "@visx/axis";
+
 export interface IMessage {
   id: string;
   type: 'text' | 'image' | 'audio' | 'video' | 'file';
@@ -69,3 +71,51 @@ export const socketEvent = {
   serverMessage: "serverMessage",
   userTyping: "userTyping",
 }
+
+export interface ICoinInfo {
+  id: string;
+  name: string;
+  symbol: string;
+  image: string;
+  price: number;
+  amount: number;
+  ROI: number;
+}
+
+export interface ICoinState {
+  coinInfo: ICoinInfo[];
+  historicalData: [number, number][];
+  invest: number;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface DataProps {
+  date: string;
+  price: number;
+}
+
+export interface AreaChartProps {
+  data: DataProps[];
+  xScale: AxisScale<number>;
+  yScale: AxisScale<number>;
+  width: number;
+  yMax: number;
+  margin: { top: number; right: number; bottom: number; left: number };
+  gradientColor: string;
+  stroke?: string;
+  hideBottomAxis?: boolean;
+  hideLeftAxis?: boolean;
+  top?: number;
+  left?: number;
+  children?: React.ReactNode;
+}
+
+export interface PrimaryChartProps {
+  data: DataProps[];
+  width: number;
+  height: number;
+  margin?: { top: number; right: number; bottom: number; left: number };
+}
+
+export type TooltipData = DataProps;

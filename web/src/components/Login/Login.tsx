@@ -14,7 +14,7 @@ export const Login: FC<{
   return (
     <div className='text-white h-full'>
       <TerminalContainer />
-      <div className="flex flex-row h-full justify-center items-center">
+      <div className="flex flex-row h-full justify-center items-center from-[#000] to-[#111] bg-[url('/login_bg.svg')] bg-cover bg-center">
         <form action="" className='flex flex-col justify-center px-24 gap-4 items-center sm:w-1/3 w-full' onSubmit={handleSubmit}>
           <img src={logo} alt="logo" className='h-12 mb-12' />
           {
