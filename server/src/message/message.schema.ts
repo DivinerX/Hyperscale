@@ -34,4 +34,4 @@ export class Message {
 }
 
 export type MessageDocument = Message & Document;
-export const MessageSchema = SchemaFactory.createForClass(Message); 
+export const MessageSchema = SchemaFactory.createForClass(Message);

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 
@@ -27,7 +27,6 @@ export class AuthController {
     return this.authService.login(username, password);
   }
 
-  @UseGuards(AuthGuard)
   @Get('all')
   getAllUser() {
     return this.authService.getAllUser();
@@ -38,4 +37,10 @@ export class AuthController {
   getTotalUser() {
     return this.authService.getTotalUser();
   }
-} 
+
+  @UseGuards(AuthGuard)
+  @Get('username/:username')
+  getUserByUsername(@Param('username') username: string) {
+    return this.authService.getUserByUsername(username);
+  }
+}

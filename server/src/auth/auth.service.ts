@@ -39,21 +39,34 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    
+
     return this.generateToken(user);
   }
 
   async getAllUser() {
-    return await this.userModel.find().exec();
+    return await this.userModel
+      .find()
+      .exec()
+      .then((users) =>
+        users.map((user) => ({ ...user.toObject(), id: user._id })),
+      );
   }
 
   async getTotalUser() {
     return await this.userModel.countDocuments().exec();
   }
 
+  async getUserByUsername(username: string) {
+    const user = await this.userModel
+      .findOne({ username })
+      .select('-password')
+      .exec();
+    return { ...user.toObject(), id: user._id };
+  }
+
   private generateToken(user: User) {
-    const payload = { 
-      sub: user._id, 
+    const payload = {
+      sub: user._id,
       username: user.username,
       avatar: user.avatar,
       verified: user.verified,
@@ -63,4 +76,13 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
-} 
+
+  validateToken(token: string): User | null {
+    try {
+      const decoded = this.jwtService.verify(token);
+      return decoded;
+    } catch {
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+}
