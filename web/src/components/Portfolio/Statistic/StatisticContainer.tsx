@@ -11,7 +11,7 @@ export const StatisticContainer: FC = () => {
   const netWorth: number = coinInfos.reduce((acc, coin) => acc + coin.price * coin.amount, 0);
   const realWorldInvestment: number = coinInfos.reduce((acc, coin) => acc + coin.cost, 0);
   const lifetimeReturns: number = netWorth - realWorldInvestment;
-  const lifetimeReturnsPercentage: number = lifetimeReturns / realWorldInvestment * 100;
+  const lifetimeReturnsPercentage: number = lifetimeReturns / realWorldInvestment * 100 || 0;
   const lifetimeReturnsTrend: 'up' | 'down' = lifetimeReturns > 0 ? 'up' : 'down';
 
   useEffect(() => {
