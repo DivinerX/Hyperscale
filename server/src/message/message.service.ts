@@ -15,15 +15,40 @@ export class MessageService {
     return newMessage.save();
   }
 
-  async getTargetMessage(id: string): Promise<Message[]> {
-    return await this.messageModel.find({
-      $or: [{ sender: id }, { receiver: id }],
-    }).exec();
+  async getPrivateMessage(
+    senderId: string,
+    receiverId: string,
+    page: number,
+  ): Promise<Message[]> {
+    const messages = await this.messageModel
+      .find({
+        $or: [
+          { $and: [{ 'sender.id': senderId }, { 'receiver.id': receiverId }] },
+          { $and: [{ 'sender.id': receiverId }, { 'receiver.id': senderId }] },
+        ],
+      })
+      .sort({ timestamp: -1 })
+      .skip(page * 15)
+      .limit(15)
+      .exec();
+
+    return messages.sort(
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+    );
   }
 
-  async getAllMessage(): Promise<Message[]> {
-    const messages = await this.messageModel.find().exec();
-    console.log(messages);
-    return messages;
+  async getPublicMessage(page: number): Promise<Message[]> {
+    const messages = await this.messageModel
+      .find({
+        receiver: null,
+      })
+      .sort({ timestamp: -1 })
+      .skip(page * 15)
+      .limit(15)
+      .exec();
+
+    return messages.sort(
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+    );
   }
-} 
+}

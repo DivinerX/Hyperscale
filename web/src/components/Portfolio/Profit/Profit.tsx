@@ -16,7 +16,7 @@ import {
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend, TimeScale);
 
-export const Profit: FC<{ historicalData: [number, number][]; invest: number }> = ({ historicalData, invest }) => {
+export const Profit: FC<{ historicalData: [number, number][]; invest: number; timePeriod: '1 Year' | '1 Month' | '1 Week' | '1 Day' }> = ({ historicalData, invest, timePeriod }) => {
   return (
     <div className="w-1/2 h-[450px] flex flex-col border border-white/10">
       <div className="flex flex-row border-b border-white/10">
@@ -26,6 +26,7 @@ export const Profit: FC<{ historicalData: [number, number][]; invest: number }> 
         <BarChart 
           invest={invest}
           historicalData={historicalData}
+          timePeriod={timePeriod}
         />
       </div>
     </div>

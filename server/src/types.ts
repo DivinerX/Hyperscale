@@ -1,4 +1,3 @@
-
 export interface IUser {
   id: string;
   username: string;
@@ -14,7 +13,7 @@ export interface IConnectedUser {
 }
 
 export interface IReceiveMessage {
-  id: string
+  id: string;
   sender: IUser;
   receiver: IUser | null;
   content: string;
@@ -27,11 +26,20 @@ export interface IMessage extends IReceiveMessage {
 }
 
 export const event = {
-  onlineUsers: "onlineUsers",
-  checkUsers: "checkUsers",
-  userIdentify: "userIdentify",
-  userMessage: "userMessage",
-  sentMessage: "sentMessage",
-  serverMessage: "serverMessage",
-  userTyping: "userTyping",
+  onlineUsers: 'onlineUsers',
+  checkUsers: 'checkUsers',
+  userIdentify: 'userIdentify',
+  userMessage: 'userMessage',
+  sentMessage: 'sentMessage',
+  serverMessage: 'serverMessage',
+  userTyping: 'userTyping',
+};
+
+export interface ICoinInfo {
+  id: string;
+  symbol: string;
+  name: string;
+  image: string;
+  current_price: number;
+  price_change_percentage_24h: number;
 }

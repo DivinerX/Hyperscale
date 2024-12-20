@@ -54,7 +54,13 @@ export const LineChart: React.FC<{ timePeriod: "1 Year" | "1 Month" | "1 Week" |
           x: {
             type: 'time',
             time: {
-              unit: timePeriod === '1 Year' ? 'month' : timePeriod === '1 Month' ? 'week' : timePeriod === '1 Week' ? 'day' : 'hour'
+              unit: timePeriod === '1 Year' ? 'month' : timePeriod === '1 Month' ? 'week' : timePeriod === '1 Week' ? 'day' : 'hour',
+              displayFormats: {
+                month: 'MMM',
+                week: 'MMM dd',
+                day: 'MMM dd',
+                hour: 'HH'
+              }
             }
           },
           y: {

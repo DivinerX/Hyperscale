@@ -5,7 +5,7 @@ import { Connection } from 'mongoose';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
-  constructor(@InjectConnection() private connection: Connection) { }
+  constructor(@InjectConnection() private connection: Connection) {}
 
   async onModuleInit() {
     try {

@@ -16,7 +16,7 @@ import {
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Filler, Tooltip, Legend, TimeScale);
 
-export const BarChart: FC<{ invest: number; historicalData: [number, number][] }> = ({ invest, historicalData }) => {
+export const BarChart: FC<{ invest: number; historicalData: [number, number][]; timePeriod: '1 Year' | '1 Month' | '1 Week' | '1 Day' }> = ({ invest, historicalData, timePeriod }) => {
   const labels = historicalData.map(data => new Date(data[0]));
   const profit = historicalData.map(data => (data[1] - invest) / invest * 100);
 
@@ -27,9 +27,11 @@ export const BarChart: FC<{ invest: number; historicalData: [number, number][] }
         label: 'profit',
         data: profit,
         borderColor: profit.map(price => price > 0 ? 'rgba(97, 229, 73, 1)' : 'rgba(169, 0, 14, 1)'),
+        backgroundColor: profit.map(price => price > 0 ? 'rgba(97, 229, 73, 0.5)' : 'rgba(169, 0, 14, 0.5)'),
         fill: true,
-        borderWidth: 2,
-        tension: 1
+        borderWidth: 1,
+        tension: 2,
+        barThickness: 1
       },
     ],
   };
@@ -47,8 +49,14 @@ export const BarChart: FC<{ invest: number; historicalData: [number, number][] }
           x: {
             type: 'time',
             time: {
-              unit: 'month'
-            }
+              unit: timePeriod === '1 Year' ? 'month' : timePeriod === '1 Month' ? 'week' : timePeriod === '1 Week' ? 'day' : 'hour',
+              displayFormats: {
+                month: 'MMM',
+                week: 'MMM dd',
+                day: 'MMM dd',
+                hour: 'HH'
+              }
+            },
           },
           y: {
             border: {
@@ -64,7 +72,7 @@ export const BarChart: FC<{ invest: number; historicalData: [number, number][] }
                 return `${tickValue}%`;
               }
             },
-          }
+          },
         },
         responsive: true,
         maintainAspectRatio: true,

@@ -25,33 +25,37 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private broadcastOnlineUsers() {
     const onlineUsers = this.getAllConnectedUsers();
     this.server.emit(event.onlineUsers, onlineUsers);
+    console.log(onlineUsers);
   }
 
   handleConnection(client: Socket) {
     const newUser: IConnectedUser = {
-      socketId: client.id
+      socketId: client.id,
     };
-    
+
     this.connectedUsers.set(client.id, newUser);
     console.log(`Client connected: ${client.id}`);
-    
+
     this.broadcastOnlineUsers();
   }
 
   handleDisconnect(client: Socket) {
     this.connectedUsers.delete(client.id);
     console.log(`Client disconnected: ${client.id}`);
-    
+
     this.broadcastOnlineUsers();
   }
 
   @SubscribeMessage(event.checkUsers)
-  handleCheckOnlineUsers(client: Socket): void {
+  handleCheckOnlineUsers(): void {
     this.broadcastOnlineUsers();
   }
 
   @SubscribeMessage(event.userIdentify)
-  handleUserIdentification(client: Socket, payload: { id: string, username: string, avatar: string }): void {
+  handleUserIdentification(
+    client: Socket,
+    payload: { id: string; username: string; avatar: string },
+  ): void {
     const user = this.connectedUsers.get(client.id);
     if (user) {
       user.id = payload.id;
@@ -63,23 +67,50 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.broadcastOnlineUsers();
   }
 
-  @SubscribeMessage(event.userMessage) 
+  @SubscribeMessage(event.userMessage)
   async handleMessage(client: Socket, payload: IReceiveMessage): Promise<void> {
-    const user = this.connectedUsers.get(client.id);
-
+    console.log(payload);
     const message: IMessage = {
       ...payload,
-      timestamp: new Date()
-    }
-    
+      timestamp: new Date(),
+    };
+
     try {
-      message.status = "sent"
+      message.status = 'sent';
+
+      if (payload.receiver && payload.receiver.id) {
+        const receiverUser = this.getUserByUserId(payload.receiver.id);
+        if (receiverUser) {
+          message.receiver = {
+            id: receiverUser.id,
+            username: receiverUser.username,
+            avatar: receiverUser.avatar,
+          };
+          this.server
+            .to(receiverUser.socketId)
+            .emit(event.serverMessage, message);
+        } else {
+          console.error('Receiver not connected:', payload.receiver.id);
+        }
+      } else {
+        client.emit(event.sentMessage, message);
+        this.server.except(client.id).emit(event.serverMessage, message);
+      }
       await this.messageService.create(message);
-      client.emit(event.sentMessage, message);
-      this.server.except(client.id).emit(event.serverMessage, message);
     } catch (error) {
       console.error('Error saving message:', error);
     }
+  }
+
+  @SubscribeMessage(event.userTyping)
+  handleTyping(
+    client: Socket,
+    payload: { username: string; isTyping: boolean },
+  ): void {
+    client.broadcast.emit(event.userTyping, {
+      username: payload.username,
+      isTyping: payload.isTyping,
+    });
   }
 
   getAllConnectedUsers(): IConnectedUser[] {
@@ -91,6 +122,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   getUserByUserId(userId: string): IConnectedUser | undefined {
-    return Array.from(this.connectedUsers.values()).find(user => user.id === userId);
+    return Array.from(this.connectedUsers.values()).find(
+      (user) => user.id === userId,
+    );
   }
 }
