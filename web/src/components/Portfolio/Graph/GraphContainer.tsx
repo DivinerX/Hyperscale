@@ -16,6 +16,7 @@ export const GraphContainer: FC = () => {
   const netWorthPercentage = interest / realWorldInvestment * 100;
   const trending: 'up' | 'down' = netWorthPercentage > 0 ? 'up' : 'down';
   const historicalData = useSelector((state: RootState) => state.coin.historicalData);
+  const loading = useSelector((state: RootState) => state.coin.loading);
 
   const setTimePeriodHandler = (timePeriod: '1 Year' | '1 Month' | '1 Week' | '1 Day') => {
     dispatch(setTimePeriod(timePeriod));
@@ -39,6 +40,7 @@ export const GraphContainer: FC = () => {
       historicalData={historicalData}
       timePeriod={timePeriod}
       setTimePeriod={setTimePeriodHandler}
+      loading={loading}
     />
   );
 };

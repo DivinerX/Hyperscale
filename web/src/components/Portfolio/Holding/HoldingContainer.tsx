@@ -8,6 +8,7 @@ export const HoldingContainer: FC = () => {
   const [searchHolding, setSearchHolding] = useState<string>('');
   const [sortBy, setSortBy] = useState<'assets' | 'value' | 'price' | 'ROI'>('value');
   const coinInfos = useSelector((state: RootState) => state.coin.coinInfos);
+  const loading = useSelector((state: RootState) => state.coin.loading);
 
   return (
     <Holding
@@ -18,6 +19,7 @@ export const HoldingContainer: FC = () => {
       setSearchHolding={setSearchHolding}
       sortBy={sortBy}
       setSortBy={setSortBy}
+      loading={loading}
     />
   );
 };
