@@ -13,6 +13,7 @@ export const StatisticContainer: FC = () => {
   const lifetimeReturns: number = netWorth - realWorldInvestment;
   const lifetimeReturnsPercentage: number = lifetimeReturns / realWorldInvestment * 100 || 0;
   const lifetimeReturnsTrend: 'up' | 'down' = lifetimeReturns > 0 ? 'up' : 'down';
+  const loading = useSelector((state: RootState) => state.coin.loading);
 
   useEffect(() => {
     dispatch(getCoinInfo());
@@ -25,6 +26,7 @@ export const StatisticContainer: FC = () => {
       lifetimeReturns={lifetimeReturns}
       lifetimeReturnsPercentage={lifetimeReturnsPercentage}
       lifetimeReturnsTrend={lifetimeReturnsTrend}
+      loading={loading}
     />
   )
 };
