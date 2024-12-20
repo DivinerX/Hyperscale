@@ -80,12 +80,13 @@ export interface ICoinInfo {
   price: number;
   amount: number;
   ROI: number;
+  cost: number;
 }
 
 export interface ICoinState {
-  coinInfo: ICoinInfo[];
+  coinInfos: ICoinInfo[];
   historicalData: [number, number][];
-  invest: number;
+  timePeriod: '1 Year' | '1 Month' | '1 Week' | '1 Day';
   loading: boolean;
   error: string | null;
 }

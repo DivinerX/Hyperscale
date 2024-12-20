@@ -5,13 +5,13 @@ import { FC } from "react";
 export const Holding: FC<{
   activeHoldings: 'list' | 'chart',
   setActiveHoldings: (activeHoldings: 'list' | 'chart') => void,
-  coinInfo: ICoinInfo[],
+  coinInfos: ICoinInfo[],
   searchHolding: string,
   setSearchHolding: (searchHolding: string) => void,
   sortBy: 'assets' | 'value' | 'price' | 'ROI',
   setSortBy: (sortBy: 'assets' | 'value' | 'price' | 'ROI') => void,
 }> = ({
-  activeHoldings, setActiveHoldings, coinInfo, searchHolding, setSearchHolding, sortBy, setSortBy
+  activeHoldings, setActiveHoldings, coinInfos, searchHolding, setSearchHolding, sortBy, setSortBy
 }) => {
     return (
       <div className="w-5/12 border border-white/10 flex flex-col h-[450px]">
@@ -52,7 +52,7 @@ export const Holding: FC<{
                 </tr>
               </thead>
               <tbody>
-                {coinInfo.filter((coin) =>
+                {coinInfos.filter((coin) =>
                   coin.symbol.toLowerCase().includes(searchHolding.toLowerCase())
                 ).sort((a, b) => {
                   if (sortBy === 'assets') return a.symbol.localeCompare(b.symbol);
@@ -63,8 +63,8 @@ export const Holding: FC<{
                   }).map((coin, index) => (
                     <tr className={`border-b border-[#171717] hover:bg-[#464646] cursor-pointer py-2 ${index % 2 === 0 ? 'bg-[#D9D9D905]' : 'bg-[#0C0C0C]'}`} key={index}>
                       <td className="text-xs text-white/50 py-2 pl-2">#{index + 1}</td>
-                      <td className="text-xs text-white py-2 flex flex-row items-center gap-1"><img src={coin.image || ''} alt={coin.symbol} className="rounded-full w-6 h-6" /> {coin.symbol}</td>
-                      <td className="text-xs text-white py-2">{coin.amount} <span className="text-xs text-[#808080]">{coin.symbol}</span></td>
+                      <td className="text-xs text-white py-2 flex flex-row items-center gap-1 uppercase"><img src={coin.image || ''} alt={coin.symbol} className="rounded-full w-6 h-6" /> {coin.symbol}</td>
+                      <td className="text-xs text-white py-2">{coin.amount} <span className="text-xs text-[#808080] uppercase">{coin.symbol}</span></td>
                       <td className="text-xs text-white py-2">${renderPrice(coin.price)}</td>
                       <td className="text-xs text-white py-2">${renderPrice(coin.price * coin.amount)}</td>
                       <td className={`text-xs py-2 ${coin.ROI && coin.ROI > 0 ? 'text-[#76FF36]' : 'text-[#FF3636]'}`}>{coin.ROI === undefined ? '-' : `${(coin.ROI * 100).toFixed(3)}%`}</td>

@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { MessageInput } from "./MessageInput";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Loading } from "@/components/Loading";
 import { sendMessage, setTarget, setWhisper, typing } from '@/store/slices/messageSlice';
 import { setMode } from '@/store/slices/userSlice';
@@ -18,6 +18,7 @@ export const MessageInputContainer: FC = () => {
   const typingUsers = useSelector((state: RootState) => state.messages.typingUsers);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   let typingTimeout: NodeJS.Timeout;
   const notifyTyping = () => {
@@ -37,6 +38,10 @@ export const MessageInputContainer: FC = () => {
   };
 
   const handleMessageChange = (newMessage: string) => {
+    if (location.pathname !== '/' && !newMessage.startsWith('/')) {
+      setMessage('');
+      return;
+    }
     setMessage(newMessage);
     if (newMessage.trim()) {
       notifyTyping();
@@ -52,6 +57,9 @@ export const MessageInputContainer: FC = () => {
   };
 
   const sendTextMessage = () => {
+    if (location.pathname !== '/') {
+      return;
+    }
     if (message.trim() && !message.startsWith('/')) {
       const newMessage = {
         id: uuidv4(),
@@ -89,6 +97,9 @@ export const MessageInputContainer: FC = () => {
         setMessage(matchingCommand);
       }
     }
+    if (e.key === 'Escape') {
+      setMessage('');
+    }
   }
 
   const handleSendMessage = () => {
@@ -100,7 +111,7 @@ export const MessageInputContainer: FC = () => {
   }
 
   const handleFileUpload = (file: File) => {
-    if (file) {
+    if (file && location.pathname === '/') {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -136,6 +147,9 @@ export const MessageInputContainer: FC = () => {
 
     switch (upperCmd) {
       case '/WHISPER':
+        if (location.pathname !== '/') {
+          navigate('/');
+        }
         if (args.length > 0) {
           const username = args[0].replace('@', '');
           handleWhisper(username);
@@ -152,12 +166,17 @@ export const MessageInputContainer: FC = () => {
         break;
       case '/GLOBE':
         console.log('Switching to global mode');
+        if (location.pathname !== '/') {
+          navigate('/');
+        }
         dispatch(setMode('GLOBAL'));
         dispatch(setTarget(null));
         break
       case '/PORTFOLIO':
         console.log('Switching to portfolio mode');
-        navigate('/portfolio');
+        if (location.pathname !== '/portfolio') {
+          navigate('/portfolio');
+        }
         dispatch(setMode('PORTFOLIO'));
         dispatch(setTarget(null));
         break
@@ -181,7 +200,15 @@ export const MessageInputContainer: FC = () => {
     user ?
       (<>
         <CommandMessage message={message} />
-        <MessageInput status={getTypingStatus()} message={message} mode={mode} setMessage={handleMessageChange} onKeyDown={onKeyDown} handleSendMessage={handleSendMessage} handleFileUpload={handleFileUpload} />
+        <MessageInput
+          status={getTypingStatus()}
+          message={message}
+          mode={mode}
+          handleMessageChange={handleMessageChange}
+          onKeyDown={onKeyDown}
+          handleSendMessage={handleSendMessage}
+          handleFileUpload={handleFileUpload}
+        />
       </>
       )
       : <Loading />

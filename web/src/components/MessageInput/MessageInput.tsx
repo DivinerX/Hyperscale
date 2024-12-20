@@ -2,21 +2,23 @@ import { AppDispatch } from "@/store";
 import { FC, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setInputHeight } from "@/store/slices/messageSlice";
+import { useLocation } from "react-router-dom";
 
 interface MessageInputProps {
   status: string;
   message: string;
   mode: string;
-  setMessage: (message: string) => void;
+  handleMessageChange: (message: string) => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   handleSendMessage: () => void;
   handleFileUpload: (file: File) => void;
 }
 
-export const MessageInput: FC<MessageInputProps> = ({ status, message, mode, setMessage, onKeyDown, handleSendMessage, handleFileUpload }) => {
+export const MessageInput: FC<MessageInputProps> = ({ status, message, mode, handleMessageChange, onKeyDown, handleSendMessage, handleFileUpload }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
 
   useEffect(() => {
     if (divRef.current) {
@@ -55,13 +57,14 @@ export const MessageInput: FC<MessageInputProps> = ({ status, message, mode, set
           type="text"
           placeholder="CLICK HERE TO TYPE"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => handleMessageChange(e.target.value)}
           onKeyDown={onKeyDown}
           className="flex-1 bg-black px-3 py-1 text-sm focus:outline-0"
         />
         <button
-          onClick={() => fileInputRef.current?.click()}
+          onClick={() => location.pathname === '/' ? fileInputRef.current?.click() : {}}
           className="p-2 px-4 text-gray-500 hover:text-gray-300 transition-colors"
+          disabled={location.pathname !== '/'}
           aria-label="Add attachment"
         >
           <svg width="18" height="18" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
