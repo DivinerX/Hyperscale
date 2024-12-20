@@ -1,5 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import { renderUnitedPrice } from '@/services/renderNumber';
 
 import 'chartjs-adapter-date-fns';
 import {
@@ -74,7 +75,7 @@ export const LineChart: React.FC<{ timePeriod: "1 Year" | "1 Month" | "1 Week" |
             },
             ticks: {
               callback: (tickValue: string | number) => {
-                return `$${tickValue}`;
+                return `$${renderUnitedPrice(tickValue)}`;
               }
             },
             min: 0
