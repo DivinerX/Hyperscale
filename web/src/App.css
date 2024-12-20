@@ -1,0 +1,46 @@
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  color: white;
+  background-color: black;
+  font-family: 'DM Mono';
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Webkit browsers (Chrome, Safari, newer versions of Opera) */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D9D9D9;
+  border-radius: 20px;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+}
+
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #D9D9D9 transparent;
+}
+
+input, select {
+  outline: none;
+}
