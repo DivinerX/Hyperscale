@@ -8,17 +8,18 @@ export const Statistic: FC<{
   lifetimeReturns: number;
   lifetimeReturnsPercentage: number;
   lifetimeReturnsTrend: 'up' | 'down';
-}> = ({ netWorth, realWorldInvestment, lifetimeReturns, lifetimeReturnsPercentage, lifetimeReturnsTrend }) => {
+  loading: boolean;
+}> = ({ netWorth, realWorldInvestment, lifetimeReturns, lifetimeReturnsPercentage, lifetimeReturnsTrend, loading }) => {
   return (
     <div className="flex flex-row w-full border border-[#474747] p-3 items-center">
       <div className="flex flex-col">
         <span className="text-xs text-[#808080] uppercase">net worth</span>
-        <span className="text-xl">${renderNumber(netWorth)}</span>
+        <span className="text-xl">${loading ? '...' : renderNumber(netWorth)}</span>
       </div>
       <div className="h-10 w-[1px] bg-white/30 mx-4"></div>
       <div className="flex flex-col">
         <span className="text-xs   text-[#808080] uppercase">real-world investment</span>
-        <span className="text-xl">${renderNumber(realWorldInvestment)}</span>
+        <span className="text-xl">${loading ? '...' : renderNumber(realWorldInvestment)}</span>
       </div>
       <div className="flex flex-col ml-4 justify-between">
         <span className="text-xs text-[#808080] uppercase pb-[2px]">lifetime returns</span>
@@ -27,12 +28,12 @@ export const Statistic: FC<{
             {lifetimeReturnsTrend === 'up' ?
               <>
                 <TbTriangleFilled className="text-[#76FF36]" />
-                <span className="text-[#76FF36] text-xs">{renderNumber(lifetimeReturnsPercentage)}%</span>
+                <span className="text-[#76FF36] text-xs">{loading ? '...' : renderNumber(lifetimeReturnsPercentage)}%</span>
               </>
               :
               <>
                 <TbTriangleInvertedFilled className="text-red-500" />
-                <span className="text-red-500 text-xs">{renderNumber(lifetimeReturnsPercentage)}%</span>
+                <span className="text-red-500 text-xs">{loading ? '...' : renderNumber(lifetimeReturnsPercentage)}%</span>
               </>
             }
 
@@ -40,7 +41,7 @@ export const Statistic: FC<{
           <span
             className={`text-xs ${lifetimeReturnsTrend === 'up' ? 'text-[#76FF36]' : 'text-red-500'} uppercase pl-2`}
           >
-            {lifetimeReturns < 0 ? `-$${renderNumber(Math.abs(lifetimeReturns))}` : `+$${renderNumber(lifetimeReturns)}`}
+            {loading ? '...' : lifetimeReturns < 0 ? `-$${renderNumber(Math.abs(lifetimeReturns))}` : `+$${renderNumber(lifetimeReturns)}`}
           </span>
         </div>
       </div>

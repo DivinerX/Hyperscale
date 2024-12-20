@@ -2,8 +2,10 @@ import { renderNumber } from "@/services/renderNumber";
 import { FC } from "react";
 import { TbTriangleFilled, TbTriangleInvertedFilled } from "react-icons/tb";
 import { LineChart } from "./LineChart";
+import { Loading } from "@/components/Loading";
 
 export const Graph: FC<{
+  loading: boolean;
   activeGraph: 'total_holdings' | 'net_worth',
   netWorth: number,
   trending: 'up' | 'down',
@@ -14,7 +16,7 @@ export const Graph: FC<{
   timePeriod: '1 Year' | '1 Month' | '1 Week' | '1 Day',
   setTimePeriod: (timePeriod: '1 Year' | '1 Month' | '1 Week' | '1 Day') => void,
 }> = ({
-  activeGraph, setActiveGraph, netWorth, trending, netWorthPercentage, interest, timePeriod, setTimePeriod, historicalData
+  activeGraph, setActiveGraph, netWorth, trending, netWorthPercentage, interest, timePeriod, setTimePeriod, historicalData, loading
 }) => {
 
     return (
@@ -66,10 +68,14 @@ export const Graph: FC<{
           </div>
         </div>
         <div className="w-full h-full pl-2 flex items-center justify-center">
-          <LineChart
-            timePeriod={timePeriod}
-            historicalData={historicalData}
-          />
+          {
+            loading ?
+              <div className="w-full h-full flex items-center justify-center"><Loading /></div> :
+              <LineChart
+                timePeriod={timePeriod}
+                historicalData={historicalData}
+              />
+          }
         </div>
       </div>
     );
