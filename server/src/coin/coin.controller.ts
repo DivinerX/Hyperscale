@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Req, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Req, Body } from '@nestjs/common';
 import { CoinService } from './coin.service';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
+import { ICoinGraphInput, ICoinInfo } from 'src/types';
 
 @Controller('api/coin')
 @UseGuards(AuthGuard)
@@ -30,8 +31,11 @@ export class CoinController {
     );
   }
 
-  @Get('/graph')
-  getGraph(@Req() req, @Query() query: { name: string; days: number }) {
-    return this.coinService.getGraph(req.user.id, query.name, query.days);
+  @Post('/graph')
+  getGraph(
+    @Req() req,
+    @Body() body: { coinInfos: ICoinGraphInput[]; days: number },
+  ) {
+    return this.coinService.getGraph(body.coinInfos, body.days);
   }
 }
