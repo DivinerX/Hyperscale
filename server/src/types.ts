@@ -43,3 +43,15 @@ export interface ICoinInfo {
   current_price: number;
   price_change_percentage_24h: number;
 }
+
+export interface ICoinGraphInput {
+  id: string;
+  name: string;
+  symbol: string;
+  amount: number;
+}
+
+export interface ICoinGraph {
+  id: string;
+  historical: number[][];
+}
