@@ -9,9 +9,9 @@ export class MessageController {
   constructor(private messageService: MessageService) {}
 
   @Get('private/:id')
-  getMessage(@Req() req, @Param('id') id: string, @Query('page') page: number) {
+  getMessage(@Req() req, @Param('id') id: string) {
     console.log(req.user);
-    return this.messageService.getPrivateMessage(id, req.user.id, page);
+    return this.messageService.getPrivateMessage(id, req.user.id);
   }
 
   @Get('public')

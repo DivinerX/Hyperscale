@@ -18,16 +18,18 @@ export const PortfolioPage: FC = () => {
 
   return (
     <WithHeader>
-      <TerminalContainer />
-      <div className="p-8 flex flex-col gap-4 w-full">
-        <StatisticContainer />
-        <div className="flex flex-row gap-4 w-full">
-          <GraphContainer />
-          <HoldingContainer />
-        </div>
-        <div className="flex flex-row gap-4 w-full">
-          <TradingContainer />
-          <ProfitContainer />
+      <div className={`flex flex-row h-full w-full`}>
+        <TerminalContainer />
+        <div className="p-8 flex flex-col gap-4 w-full h-full overflow-y-auto">
+          <StatisticContainer />
+          <div className="flex flex-row gap-4 w-full">
+            <GraphContainer />
+            <HoldingContainer />
+          </div>
+          <div className="flex flex-row gap-4 w-full">
+            <TradingContainer />
+            <ProfitContainer />
+          </div>
         </div>
       </div>
     </WithHeader>
