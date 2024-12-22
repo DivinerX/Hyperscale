@@ -54,7 +54,7 @@ export const BarChart: FC<{ invest: number; historicalData: [number, number][]; 
                 month: 'MMM',
                 week: 'MMM dd',
                 day: 'MMM dd',
-                hour: 'HH'
+                hour: 'HH:mm'
               }
             },
           },

@@ -60,7 +60,7 @@ export const LineChart: React.FC<{ timePeriod: "1 Year" | "1 Month" | "1 Week" |
                 month: 'MMM',
                 week: 'MMM dd',
                 day: 'MMM dd',
-                hour: 'HH'
+                hour: 'HH:mm'
               }
             }
           },
