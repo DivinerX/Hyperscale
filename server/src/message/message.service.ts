@@ -18,7 +18,6 @@ export class MessageService {
   async getPrivateMessage(
     senderId: string,
     receiverId: string,
-    page: number,
   ): Promise<Message[]> {
     const messages = await this.messageModel
       .find({
@@ -28,8 +27,6 @@ export class MessageService {
         ],
       })
       .sort({ timestamp: -1 })
-      .skip(page * 15)
-      .limit(15)
       .exec();
 
     return messages.sort(
