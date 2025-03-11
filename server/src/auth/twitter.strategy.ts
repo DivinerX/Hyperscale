@@ -15,7 +15,8 @@ export class TwitterStrategy extends PassportStrategy(Strategy, 'twitter') {
       consumerSecret: configService.get<string>('TWITTER_CONSUMER_SECRET'),
       callbackURL: configService.get<string>('TWITTER_CALLBACK_URL'),
       includeEmail: true,
-      passReqToCallback: true
+      passReqToCallback: true,
+      sessionKey: 'oauth:twitter'
     });
   }
 

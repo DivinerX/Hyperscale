@@ -11,8 +11,8 @@ import { User, UserSchema } from './user.schema';
 @Module({
   imports: [
     PassportModule.register({ 
-      defaultStrategy: 'twitter',
-      session: true // Enable session support
+      defaultStrategy: 'jwt',
+      session: true
     }),
     ConfigModule.forRoot(),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
