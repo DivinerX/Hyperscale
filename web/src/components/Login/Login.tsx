@@ -9,8 +9,9 @@ export const Login: FC<{
   password: string,
   setPassword: (password: string) => void,
   loading: boolean,
-  error: string
-}> = ({ handleSubmit, username, setUsername, password, setPassword, loading, error }) => {
+  error: string,
+  handleXLogin?: () => void
+}> = ({ handleSubmit, username, setUsername, password, setPassword, loading, error, handleXLogin }) => {
   return (
     <div className='text-white h-full'>
       <TerminalContainer />
@@ -43,7 +44,16 @@ export const Login: FC<{
             />
           </div>
           <button type='submit' className='bg-[#111111] border border-[#4D4D4D] text-center w-full align-middle py-2 uppercase'>{loading ? `Authenticating...` : `Authenticate`}</button>
-          <button type='button' className='text-xs bg-[#191919] border border-[#4D4D4D] px-4 py-2 w-full uppercase'>continue with x</button>
+          <button 
+            type='button' 
+            className='text-xs bg-[#191919] border border-[#4D4D4D] px-4 py-2 w-full uppercase flex items-center justify-center gap-2'
+            onClick={handleXLogin}
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+            continue with x
+          </button>
         </form>
       </div>
     </div>
