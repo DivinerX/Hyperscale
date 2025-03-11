@@ -49,6 +49,10 @@ export class AuthService {
     return this.generateToken(user);
   }
 
+  async loginWithTwitter(user: User) {
+    return this.generateToken(user);
+  }
+
   async getAllUser() {
     return await this.userModel
       .find()
@@ -108,5 +112,21 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException('Invalid token');
     }
+  }
+
+  async validateTwitterUser(profile: { username: string; avatar: string }) {
+    let user = await this.userModel.findOne({ username: profile.username });
+    console.log(user);
+    if (!user) {
+      // Create new user from Twitter profile
+      user = await this.userModel.create({
+        username: profile.username,
+        avatar: profile.avatar,
+        verified: true, // Twitter users are considered verified
+        password: null, // No password for social login
+      });
+    }
+
+    return user;
   }
 }

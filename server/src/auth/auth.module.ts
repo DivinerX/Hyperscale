@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './user.schema';
 import { ConfigService } from '@nestjs/config';
 import { ConfigModule } from '@nestjs/config';
+import { TwitterStrategy } from './twitter.strategy';
 
 @Module({
   imports: [
@@ -19,7 +20,10 @@ import { ConfigModule } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    TwitterStrategy,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}
