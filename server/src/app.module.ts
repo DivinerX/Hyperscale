@@ -10,6 +10,7 @@ import { Message, MessageSchema } from './message/message.schema';
 import { CoinModule } from './coin/coin.module';
 import { CoinSchema } from './coin/coin.schema';
 import { Coin } from './coin/coin.schema';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { Coin } from './coin/coin.schema';
     MongooseModule.forFeature([{ name: Coin.name, schema: CoinSchema }]),
     MessageModule,
     CoinModule,
+    AuthModule,
   ],
   providers: [DatabaseService, SocketGateway, MessageService],
 })
