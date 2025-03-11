@@ -36,13 +36,13 @@ export class AuthController {
     return this.authService.getAllUser();
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @Get('total')
   getTotalUser() {
     return this.authService.getTotalUser();
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @Get('username/:username')
   getUserByUsername(@Param('username') username: string) {
     return this.authService.getUserByUsername(username);
