@@ -15,14 +15,17 @@ export class TwitterStrategy extends PassportStrategy(Strategy, 'twitter') {
       consumerSecret: configService.get<string>('TWITTER_CONSUMER_SECRET'),
       callbackURL: configService.get<string>('TWITTER_CALLBACK_URL'),
       includeEmail: true,
+      passReqToCallback: true
     });
   }
 
   async validate(
+    req: any,
     token: string,
     tokenSecret: string,
     profile: any,
   ): Promise<any> {
+    console.log("twitter profile", profile)
     const { id, username, photos } = profile;
     
     // Create or get user from database
