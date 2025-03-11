@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 
 class RegisterDto {
   username: string;
@@ -15,7 +16,10 @@ class LoginDto {
 
 @Controller('api/user')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService
+  ) {}
 
   @Post('register')
   register(@Body() { username, password, avatar }: RegisterDto) {
@@ -42,5 +46,24 @@ export class AuthController {
   @Get('username/:username')
   getUserByUsername(@Param('username') username: string) {
     return this.authService.getUserByUsername(username);
+  }
+
+  @Get('twitter')
+  @UseGuards(AuthGuard('twitter'))
+  async twitterAuth() {
+    // Twitter authentication will be initiated
+    console.log('Twitter authentication will be initiated');
+    
+  }
+
+  @Get('twitter/callback')
+  @UseGuards(AuthGuard('twitter'))
+  async twitterAuthCallback(@Req() req, @Res() res) {
+    const token = req.user.access_token;
+    
+    // Redirect to frontend with token
+    return res.redirect(
+      `${this.configService.get('FRONTEND_URL')}/auth/twitter?token=${token}`
+    );
   }
 }

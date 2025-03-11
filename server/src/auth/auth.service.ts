@@ -5,6 +5,12 @@ import { Model } from 'mongoose';
 import { User } from './user.schema';
 import * as bcrypt from 'bcrypt';
 
+interface TwitterUser {
+  twitterId: string;
+  username: string;
+  avatar: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -62,6 +68,24 @@ export class AuthService {
       .select('-password')
       .exec();
     return { ...user.toObject(), id: user._id };
+  }
+
+  async findOrCreateTwitterUser(twitterUser: TwitterUser) {
+    let user = await this.userModel.findOne({ 
+      username: twitterUser.username 
+    }).exec();
+
+    if (!user) {
+      user = await this.userModel.create({
+        username: twitterUser.username,
+        avatar: twitterUser.avatar,
+        password: null, // Twitter users don't need password
+        twitterId: twitterUser.twitterId,
+        verified: true, // Twitter users are considered verified
+      });
+    }
+
+    return this.generateToken(user);
   }
 
   private generateToken(user: User) {

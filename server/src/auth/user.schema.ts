@@ -17,6 +17,9 @@ export class User extends Document {
 
   @Prop({ required: true, default: false })
   verified: boolean;
+
+  @Prop({ required: false })
+  twitterId: string;
 }
 
 export type UserDocument = User & Document;
