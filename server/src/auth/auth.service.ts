@@ -83,9 +83,10 @@ export class AuthService {
       user = await this.userModel.create({
         username: twitterUser.username,
         avatar: twitterUser.avatar,
-        password: null, // Twitter users don't need password
+        password: null,
         twitterId: twitterUser.twitterId,
-        verified: true, // Twitter users are considered verified
+        verified: true,
+        authMethod: 'twitter'
       });
     }
 
