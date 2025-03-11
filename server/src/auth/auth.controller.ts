@@ -52,18 +52,28 @@ export class AuthController {
   @UseGuards(AuthGuard('twitter'))
   async twitterAuth() {
     // Twitter authentication will be initiated
-    console.log('Twitter authentication will be initiated');
-    
+    console.log('Twitter authentication initiated');
   }
 
   @Get('twitter/callback')
   @UseGuards(AuthGuard('twitter'))
   async twitterAuthCallback(@Req() req, @Res() res) {
-    const token = req.user.access_token;
-    
-    // Redirect to frontend with token
-    return res.redirect(
-      `${this.configService.get('FRONTEND_URL')}/auth/twitter?token=${token}`
-    );
+    try {
+      const token = req.user.access_token;
+      if (!token) {
+        throw new Error('No token received from Twitter authentication');
+      }
+      
+      // Redirect to frontend with token
+      return res.redirect(
+        `${this.configService.get('FRONTEND_URL')}/auth/twitter?token=${token}`
+      );
+    } catch (error) {
+      console.error('Twitter callback error:', error);
+      // Redirect to frontend with error
+      return res.redirect(
+        `${this.configService.get('FRONTEND_URL')}/login?error=twitter_auth_failed`
+      );
+    }
   }
 }

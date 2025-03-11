@@ -29,7 +29,6 @@ export const LoginContainer: FC = () => {
 
   const handleXLogin = () => {
     // Redirect to the backend Twitter auth endpoint
-    
     window.location.href = `${import.meta.env.VITE_API_URL}/api/user/twitter`;
   };
 
