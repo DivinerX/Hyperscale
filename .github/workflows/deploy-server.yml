@@ -1,0 +1,23 @@
+name: Deploy Server
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+
+jobs:
+  deploy-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to fly.io
+        run: |
+          cd server
+          flyctl deploy --verbose
+        env:
+          FLY_API_TOKEN: fo1_kBJv6p-NQvNaINOilq1mev3cA8aWBcivXiaTuxObJdI
